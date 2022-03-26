@@ -2,29 +2,33 @@
   <div class="login">
       <card>
         <div class="title">
-          <span  style="font-size: 150%" v-if="roleFlag===0">用户登录</span>
-          <span  style="font-size: 150%" v-else-if="roleFlag===1">管理员登录</span>
-          <span  style="font-size: 150%" v-else-if="roleFlag===2">用户注册</span>
+          <span  style="font-size: 150%" v-show="flag">用户登录</span>
+          <span  style="font-size: 150%" v-show="!flag">企业注册</span>
         </div>
         <Form ref="formItem" :model="formItem" :rules="ruleValidate" :label-width="0" class="loginForm">
-          <FormItem prop="username" class="userName">
-            <Input size="large" placeholder="请输入账号" v-model="formItem.username">
+          <FormItem prop="userCompany" class="userCompany" v-show="!flag">
+            <Input size="large"  placeholder="请输入公司名称" v-model="formItem.userCompany" type="text">
+              <Icon type="ios-home"  slot="prefix"/>
+            </Input>
+          </FormItem>
+          <FormItem prop="userName" class="userName">
+            <Input size="large" placeholder="请输入账号" v-model="formItem.userName">
               <Icon type="ios-contact" slot="prefix" />
             </Input>
           </FormItem>
-          <FormItem prop="password" class="passWord">
-            <Input size="large"  placeholder="请输入密码" v-model="formItem.password" type="password">
+          <FormItem prop="userPassWord" class="userPassWord">
+            <Input size="large"  placeholder="请输入密码" v-model="formItem.userPassWord" type="password">
               <Icon type="ios-lock"  slot="prefix"/>
             </Input>
           </FormItem>
+
         </Form>
         <Button type="primary" size="large"  @click="handleSubmit('formItem')" class="loginButton" v-if = "flag">登录</Button>
         <Button type="primary" size="large"  @click="handleRegisterSubmit('formItem')" class="loginButton" v-else-if="!flag">注册</Button>
         <div class="flexBetween">
-          <SPAN style="float: left;height: 100%;margin-top: 5%;">或</SPAN>
-          <A type="text" @click="register()" style="float: left;height: 100%;color: cornflowerblue;margin-top: 5%" >注册账号</A>
-          <A type="text" @click="changeRole(1)" style="float: right;height: 100%;color: cornflowerblue;margin-top: 5%" v-if="roleFlag===0">管理员通道</A>
-          <A type="text" @click="changeRole(0)" style="float: right;height: 100%;color: cornflowerblue;margin-top: 5%" v-else-if="roleFlag!==0">用户登录</A>
+          <SPAN style="float: left;height: 100%;margin-top: 5%;" v-show="flag">或</SPAN>
+          <A type="text" @click="register()" style="float: left;height: 100%;color: cornflowerblue;margin-top: 5%" v-show="flag">注册企业</A>
+          <A type="text" @click="changeRole(0)" style="float: left;height: 100%;color: cornflowerblue;margin-top: 5%" v-show="!flag">用户登录</A>
         </div>
       </card>
   </div>
@@ -37,24 +41,30 @@ export default {
     return {
       // 表单
       formItem: {
-        username: "",
-        password: "",
+        userName: "",
+        userPassWord: "",
+        userCompany:"",
+        userRole:"",
       },
       // 校验规则
       ruleValidate: {
-        username: [{
+        userName: [{
           required: true,
           message: "输入用户名",
           trigger: "blur",
         }, ],
-        password: [{
+        userPassWord: [{
           required: true,
           message: "输入密码",
           trigger: "blur",
         }, ],
+        userCompany: [{
+          required: true,
+          message: "输入公司名称",
+          trigger: "blur",
+        }, ],
       },
       flag: true,
-      roleFlag: 0,
     };
   },
   methods: {
@@ -93,7 +103,6 @@ export default {
     },
     register(){
         this.flag = false;
-        this.roleFlag = 2;
     },
     handleRegisterSubmit(name){
       // 校验表单数据
@@ -101,7 +110,8 @@ export default {
       this.$refs[name].validate((valid) => {
         if (valid) {
           // 校验成功 发起请求
-          this.axios.put(this.api.baseUrl + "/user/register" + "/" + this.formItem.username + "/" + this.formItem.password).then((res) => {
+          this.formItem.userRole = 0;
+          this.axios.put(this.api.baseUrl + "/user/register",this.formItem).then((res) => {
             let code = res.data.code;
             let msg = res.data.msg;
             if (code === 200) {
@@ -124,10 +134,8 @@ export default {
     },
     changeRole(roleInt){
       if (roleInt===0){
-        this.roleFlag = 0;
         this.flag = true;
       }else if (roleInt === 1){
-        this.roleFlag = 1;
         this.flag = true;
       }
     },
