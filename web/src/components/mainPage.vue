@@ -1,11 +1,11 @@
 <template>
   <div class="layout">
-    <Layout style="height: 99.6vh">
-      <Sider ref="side1">
-        <Menu active-name="1-1" theme="dark" width="auto">
+    <Row>
+      <Col span="1.5">
+        <Menu active-name="1-1" theme="dark" width="auto" style="height: 100vh">
           <MenuItem name="1-1" @click.native="push('/index')">
-            <Icon type="md-home"></Icon>
-            <span>工作台</span>
+              <Icon type="md-home"></Icon>
+              <span>工作台</span>
           </MenuItem>
           <MenuItem name="1-2" @click.native="push('/project')">
             <Icon type="ios-cube-outline"></Icon>
@@ -19,7 +19,7 @@
             <Icon type="ios-search"></Icon>
             <span>搜索</span>
           </MenuItem>
-          <MenuItem name="1-5" style="margin-top: 200%;position: relative;">
+          <MenuItem name="1-5" >
             <Icon type="md-person-add"></Icon>
             <span>邀请用户</span>
           </MenuItem>
@@ -27,11 +27,10 @@
             <Icon type="ios-contact"></Icon>
             <span>个人</span>
           </MenuItem>
-
         </Menu>
-      </Sider>
+      </Col>
       <router-view></router-view>
-    </Layout>
+    </Row>
   </div>
 </template>
 
@@ -48,29 +47,11 @@ export default {
 
 <style scoped>
 .layout{
-  border: 1px solid #d7dde4;
   background: #f5f7f9;
-  position: relative;
-  border-radius: 4px;
   overflow: hidden;
+  height: 100vh;
 }
-.layout-header-bar{
-  background: #fff;
-  box-shadow: 0 1px 1px rgba(0,0,0,.1);
-}
-.layout-logo-left{
-  width: 90%;
-  height: 30px;
-  background: #5b6270;
-  border-radius: 3px;
-  margin: 15px auto;
-}
-.menu-icon{
-  transition: all .3s;
-}
-.rotate-icon{
-  transform: rotate(-90deg);
-}
+
 .menu-item span{
   display: inline-block;
   overflow: hidden;
@@ -87,7 +68,7 @@ export default {
   font-size: 16px;
 }
 .collapsed-menu span{
-  width: 0px;
+  width: 0;
   transition: width .2s ease;
 }
 .collapsed-menu i{
