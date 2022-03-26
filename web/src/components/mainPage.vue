@@ -37,7 +37,7 @@
 
 <script>
 export default {
-  name: "mainpage",
+  name: "mainPage",
   methods:{
     push(name){
       this.$router.push(name);

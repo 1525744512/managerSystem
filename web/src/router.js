@@ -10,6 +10,9 @@ Vue.use(VueRouter);
 import Login from "@/components/Login";
 import userInformation from "@/components/userInformation";
 import backIndex from "@/components/backIndex";
+import mainPage from "@/components/mainPage";
+import index from "@/components/index";
+import project from "@/components/project";
 const routes=[
     {
         path: '/Login',
@@ -30,6 +33,44 @@ const routes=[
         path: '/backIndex',
         name:'backIndex',
         component: backIndex
+    },
+    {
+        path: '/mainPage',
+        name: 'mainPage',
+        component: mainPage,
+        redirect: {path:'/index'},
+        children: [
+            {
+                path: '/index',
+                name:'index',
+                component: index,
+            },
+            {
+                path: '/project',
+                name: 'project',
+                component: project
+            },
+            // {
+            //     path: '/showresT',
+            //     name: 'showresT',
+            //     component: showresT
+            // },
+            // {
+            //     path: '/showresT',
+            //     name: 'showresT',
+            //     component: showresT
+            // },
+            // {
+            //     path: '/showresT',
+            //     name: 'showresT',
+            //     component: showresT
+            // },
+            // {
+            //     path: '/showresT',
+            //     name: 'showresT',
+            //     component: showresT
+            // }
+        ]
     },
 
 ]
