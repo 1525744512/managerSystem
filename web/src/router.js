@@ -8,10 +8,8 @@ VueRouter.prototype.push = function push(location) {
 Vue.use(VueRouter);
 
 import Login from "@/components/Login";
-import Mainpage from "@/components/mainpage";
-import index from "@/components/index";
-import project from "@/components/project";
-
+import userInformation from "@/components/userInformation";
+import backIndex from "@/components/backIndex";
 const routes=[
     {
         path: '/Login',
@@ -20,57 +18,19 @@ const routes=[
     },
     {
         path:'',
-        name:'index1',
+        name:'index',
         redirect:{path:'/Login'}
     },
     {
-        path: '/mainpage',
-        name: 'mainpage',
-        component: Mainpage,
-        redirect: {path:'/index'},
-        children: [
-            {
-                path: '/index',
-                name:'index',
-                component: index,
-            },
-            {
-                path: '/project',
-                name: 'project',
-                component: project
-            },
-            // {
-            //     path: '/showresT',
-            //     name: 'showresT',
-            //     component: showresT
-            // },
-            // {
-            //     path: '/showresT',
-            //     name: 'showresT',
-            //     component: showresT
-            // },
-            // {
-            //     path: '/showresT',
-            //     name: 'showresT',
-            //     component: showresT
-            // },
-            // {
-            //     path: '/showresT',
-            //     name: 'showresT',
-            //     component: showresT
-            // }
-        ]
+        path: '/userInformation',
+        name:'userInformation',
+        component: userInformation
     },
-    // {
-    //     path: '/userInformation',
-    //     name:'userInformation',
-    //     component: userInformation
-    // },
-    // {
-    //     path: '/backIndex',
-    //     name:'backIndex',
-    //     component: backIndex
-    // },
+    {
+        path: '/backIndex',
+        name:'backIndex',
+        component: backIndex
+    },
 
 ]
 const router=new VueRouter({
@@ -78,4 +38,3 @@ const router=new VueRouter({
     routes
 })
 export default router
-
