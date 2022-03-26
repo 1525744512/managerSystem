@@ -10,7 +10,7 @@ Vue.use(VueRouter);
 import Login from "@/components/Login";
 import userInformation from "@/components/userInformation";
 import backIndex from "@/components/backIndex";
-
+const NotFound = { template: '<p>Page not found</p>' }
 const routes=[
     {
         path: '/Login',
@@ -39,3 +39,15 @@ const router=new VueRouter({
     routes
 })
 export default router
+new Vue({
+    el: '#app',
+    data: {
+        currentRoute: window.location.pathname
+    },
+    computed: {
+        ViewComponent () {
+            return routes[this.currentRoute] || NotFound
+        }
+    },
+    render (h) { return h(this.ViewComponent) }
+})
