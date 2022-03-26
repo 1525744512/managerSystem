@@ -8,9 +8,10 @@ VueRouter.prototype.push = function push(location) {
 Vue.use(VueRouter);
 
 import Login from "@/components/Login";
-import userInformation from "@/components/userInformation";
-import backIndex from "@/components/backIndex";
-const NotFound = { template: '<p>Page not found</p>' }
+import Mainpage from "@/components/mainpage";
+import index from "@/components/index";
+import project from "@/components/project";
+
 const routes=[
     {
         path: '/Login',
@@ -19,19 +20,57 @@ const routes=[
     },
     {
         path:'',
-        name:'index',
+        name:'index1',
         redirect:{path:'/Login'}
     },
     {
-        path: '/userInformation',
-        name:'userInformation',
-        component: userInformation
+        path: '/mainpage',
+        name: 'mainpage',
+        component: Mainpage,
+        redirect: {path:'/index'},
+        children: [
+            {
+                path: '/index',
+                name:'index',
+                component: index,
+            },
+            {
+                path: '/project',
+                name: 'project',
+                component: project
+            },
+            // {
+            //     path: '/showresT',
+            //     name: 'showresT',
+            //     component: showresT
+            // },
+            // {
+            //     path: '/showresT',
+            //     name: 'showresT',
+            //     component: showresT
+            // },
+            // {
+            //     path: '/showresT',
+            //     name: 'showresT',
+            //     component: showresT
+            // },
+            // {
+            //     path: '/showresT',
+            //     name: 'showresT',
+            //     component: showresT
+            // }
+        ]
     },
-    {
-        path: '/backIndex',
-        name:'backIndex',
-        component: backIndex
-    },
+    // {
+    //     path: '/userInformation',
+    //     name:'userInformation',
+    //     component: userInformation
+    // },
+    // {
+    //     path: '/backIndex',
+    //     name:'backIndex',
+    //     component: backIndex
+    // },
 
 ]
 const router=new VueRouter({
@@ -39,15 +78,4 @@ const router=new VueRouter({
     routes
 })
 export default router
-new Vue({
-    el: '#app',
-    data: {
-        currentRoute: window.location.pathname
-    },
-    computed: {
-        ViewComponent () {
-            return routes[this.currentRoute] || NotFound
-        }
-    },
-    render (h) { return h(this.ViewComponent) }
-})
+
