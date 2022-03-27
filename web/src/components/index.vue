@@ -5,14 +5,24 @@
         <div style="float:left;margin-left: 2%;text-align: center;height: 8vh;display: inline-block;">
           <span>我的工作台</span>
         </div>
-        <div style="float: right;width: 50px;height: 50px">
-          <icon class="icon-change" type="ios-sync" @click="update"></icon>
-        </div>
+          <Button icon="ios-sync" type="text" @click="update" style="margin-left:1%"></Button>
       </div>
     </Header>
     <content :style="{padding: '20px',background: '#e5ecfc',height:'92vh'}">
-      <card :bordered="false">
+      <card :bordered="false" style="height: 85vh">
         <p slot="title">我的任务</p>
+        <Button type="primary"  slot="title" icon="ios-add" style="float: right;width: 35px;height: 35px;">
+        </Button>
+        <Collapse simple style="border: 0">
+          <Panel name="1" >
+            史蒂夫·乔布斯
+            <p slot="content">史蒂夫·乔布斯（Steve Jobs），1955年2月24日生于美国加利福尼亚州旧金山，美国发明家、企业家、美国苹果公司联合创办人。</p>
+          </Panel>
+          <Panel name="3">
+            乔纳森·伊夫
+            <p slot="content">乔纳森·伊夫是一位工业设计师，现任Apple公司设计师兼资深副总裁，英国爵士。他曾参与设计了iPod，iMac，iPhone，iPad等众多苹果产品。除了乔布斯，他是对苹果那些著名的产品最有影响力的人。</p>
+          </Panel>
+        </Collapse>
       </card>
     </content>
   </Layout>
@@ -39,8 +49,12 @@ export default {
 .icon-change{
   height: 30px;
   width: 30px;
+  float: right;
 }
 .icon-change:hover{
   background-color: #d7dde4;
+}
+.ivu-card-head p, .ivu-card-head-inner{
+  width: 5%;
 }
 </style>
