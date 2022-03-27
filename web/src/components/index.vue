@@ -11,8 +11,8 @@
     <content :style="{padding: '20px',background: '#e5ecfc',height:'92vh'}">
       <card :bordered="false" style="height: 85vh">
         <p slot="title">我的任务</p>
-        <Button type="primary"  slot="title" icon="ios-add" style="float: right;width: 35px;height: 35px;">
-        </Button>
+        <Button type="primary"  slot="title" icon="ios-add" style="float: right;width: 35px;height: 35px;" @click="add"></Button>
+        <workAdd  v-if="flag" ref="workAdd"></workAdd>
         <Collapse simple style="border: 0">
           <Panel name="1" >
             史蒂夫·乔布斯
@@ -29,11 +29,24 @@
 </template>
 
 <script>
+import workAdd from "@/components/workAdd"
 export default {
   name: "index",
+  components:{workAdd},
+  data () {
+    return{
+      flag: false
+    }
+  },
   methods:{
     update (){
 
+    },
+    add () {
+      this.flag = true;
+      this.$nextTick(() => {
+        this.$refs.workAdd.init();
+      });
     }
   }
 }

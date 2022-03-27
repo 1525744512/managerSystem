@@ -84,9 +84,9 @@ export default {
                   //如果登录成功进行转
                   let role = JSON.parse(JSON.stringify(res.data.data.userRole));
                   if (role===0){
-                    that.$router.push("/userInformation");
+                    that.$router.push("/mainPage");
                   }else if (role===1){
-                    that.$router.push("/backIndex");
+                    that.$router.push("/mainPage");
                   }
                 } else {
                     // todo 登录失败处理
