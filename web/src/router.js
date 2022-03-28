@@ -13,6 +13,8 @@ import backIndex from "@/components/backIndex";
 import mainPage from "@/components/mainPage";
 import index from "@/components/index";
 import project from "@/components/project";
+import workAdd from "@/components/workAdd";
+import projectAdd from "@/components/projectAdd";
 const routes=[
     {
         path: '/Login',
@@ -33,6 +35,16 @@ const routes=[
         path: '/backIndex',
         name:'backIndex',
         component: backIndex
+    },
+    {
+        path: '/workAdd',
+        name:'workAdd',
+        component: workAdd
+    },
+    {
+        path: '/projectAdd',
+        name:'projectAdd',
+        component: projectAdd
     },
     {
         path: '/mainPage',

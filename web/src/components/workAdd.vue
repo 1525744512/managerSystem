@@ -1,75 +1,72 @@
 <template>
   <modal v-model="modal"
          title="创建任务">
-    <div>
-      <Layout style="height: 70vh">
-        <Content>
-          <Content style="margin: 3.5%">
-            <label>标题</label>
-            <Input v-model="title" placeholder="请输入标题" style="width: 100%;margin-top: 0.5%;margin-bottom: 1.5%"/>
-            <row>
-              <Col span="12">
-                <label>选择项目</label>
-              </Col>
-              <Col span="12">
-                <label style="margin-left: 5%">截至时间</label>
-              </Col>
-            </row>
-            <row style="margin-bottom: 1.5%;margin-top: 0.5%;">
-              <Col span="12">
-                <Select v-model="workChoose" clearable style="width: 95%">
-                  <Option v-for="item in work" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                </Select>
-              </Col>
-              <Col span="12">
-                <DatePicker type="date" placeholder="任务截至时间" style="width: 95%;margin-left: 5%"></DatePicker>
-              </Col>
-            </row>
-            <row>
-              <Col span="12">
-                <label>负责人</label>
-              </Col>
-              <Col span="12">
-                <label style="margin-left: 5%">参与人</label>
-              </Col>
+    <Layout style="height: 70vh">
+      <Content>
+        <Content style="margin: 3.5%">
+          <label>标题</label>
+          <Input v-model="title" placeholder="请输入标题" style="width: 100%;margin-top: 0.5%;margin-bottom: 1.5%"/>
+          <row>
+            <Col span="12">
+              <label>选择项目</label>
+            </Col>
+            <Col span="12">
+              <label style="margin-left: 5%">截至时间</label>
+            </Col>
+          </row>
+          <row style="margin-bottom: 1.5%;margin-top: 0.5%;">
+            <Col span="12">
+              <Select v-model="workChoose" clearable style="width: 95%">
+                <Option v-for="item in work" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+            </Col>
+            <Col span="12">
+              <DatePicker type="date" placeholder="任务截至时间" style="width: 95%;margin-left: 5%"></DatePicker>
+            </Col>
+          </row>
+          <row>
+            <Col span="12">
+              <label>负责人</label>
+            </Col>
+            <Col span="12">
+              <label style="margin-left: 5%">参与人</label>
+            </Col>
 
-            </row>
-            <row style="margin-bottom: 1.5%;margin-top: 0.5%;">
-              <Col span="12">
-                <Icon type="ios-contact" size="40" style="color: aqua"></Icon>
-                <label style="margin-top: 2%">吉磊</label>
-              </Col>
-              <Col span="12">
-                <Select v-model="usersChoose" multiple filterable :max-tag-count="2"
-                        :max-tag-placeholder="maxTagPlaceholder"
-                        style="width: 95%;margin-left: 5%">
-                  <Option v-for="item in users" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                </Select>
-              </Col>
-            </row>
-            <row>
-              <label>描述</label>
-            </row>
-            <row style="margin-bottom: 1.5%;margin-top: 0.5%;">
-              <quill-editor
-                  v-model="content"
-                  ref="myQuillEditor"
-                  :options="editorOption"
-                  @blur="onEditorBlur($event)" @focus="onEditorFocus($event)"
-                  @change="onEditorChange($event)">
-              </quill-editor>
-            </row>
-          </Content>
+          </row>
+          <row style="margin-bottom: 1.5%;margin-top: 0.5%;">
+            <Col span="12">
+              <Icon type="ios-contact" size="40" style="color: aqua"></Icon>
+              <label style="margin-top: 2%">吉磊</label>
+            </Col>
+            <Col span="12">
+              <Select v-model="usersChoose" multiple filterable :max-tag-count="2"
+                      :max-tag-placeholder="maxTagPlaceholder"
+                      style="width: 95%;margin-left: 5%">
+                <Option v-for="item in users" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+            </Col>
+          </row>
+          <row>
+            <label>描述</label>
+          </row>
+          <row style="margin-bottom: 1.5%;margin-top: 0.5%;">
+            <quill-editor
+                v-model="content"
+                ref="myQuillEditor"
+                :options="editorOption"
+                @blur="onEditorBlur($event)" @focus="onEditorFocus($event)"
+                @change="onEditorChange($event)">
+            </quill-editor>
+          </row>
         </Content>
-      </Layout>
-    </div>
+      </Content>
+    </Layout>
   </modal>
 </template>
 
 <script>
 export default {
   name: "workAdd",
-
   data() {
     return {
       title: '',

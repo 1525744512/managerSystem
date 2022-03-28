@@ -11,7 +11,7 @@
             <Icon type="ios-cube-outline"></Icon>
             <span>项目</span>
           </MenuItem>
-          <MenuItem name="1-3">
+          <MenuItem name="1-3" @click.native="value1 = true">
             <Icon type="md-add"></Icon>
             <span>新建</span>
           </MenuItem>
@@ -29,6 +29,15 @@
           </MenuItem>
         </Menu>
       </Col>
+
+<!--      新建弹出框-->
+      <Drawer title="新建" :closable="false" v-model="value1" width="9%">
+        <Button type="text" @click="addProject">新建项目</Button>
+        <project-add v-if="flag2" ref="projectAdd"></project-add>
+
+        <Button type="text" @click="add">新建任务</Button>
+        <workAdd  v-if="flag" ref="workAdd"></workAdd>
+      </Drawer>
       <router-view></router-view>
       <inviteMembers title="测试窗口" v-if="openDialog" ref="inviteMembers"/>
     </Row>
@@ -36,13 +45,17 @@
 </template>
 
 <script>
+import workAdd from "@/components/workAdd"
+import projectAdd from "@/components/projectAdd";
 import inviteMembers from "@/components/inviteMembers";
-
 export default {
   name: "mainPage",
-  components: {inviteMembers},
-  data(){
-    return{
+  components:{workAdd,projectAdd,inviteMembers},
+  data () {
+    return {
+      value1: false,
+      flag: false,
+      flag2: false,
       openDialog:false,
       isOwnerFlag:false,
     }
@@ -50,6 +63,18 @@ export default {
   methods:{
     push(name){
       this.$router.push(name);
+    },
+    add () {
+      this.flag = true;
+      this.$nextTick(() => {
+        this.$refs.workAdd.init();
+      });
+    },
+    addProject () {
+      this.flag2 = true;
+      this.$nextTick(() => {
+        this.$refs.projectAdd.init();
+      });
     },
     openInviteMembers(){
       this.openDialog = true;
@@ -67,7 +92,6 @@ export default {
     this.isOwner();
 
   }
-
 }
 </script>
 
@@ -103,5 +127,4 @@ export default {
   vertical-align: middle;
   font-size: 22px;
 }
-
 </style>
