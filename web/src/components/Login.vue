@@ -6,7 +6,7 @@
           <span  style="font-size: 150%" v-show="!flag">企业注册</span>
         </div>
         <Form ref="formItem" :model="formItem" :rules="ruleValidate" :label-width="0" class="loginForm">
-          <FormItem prop="userCompany" class="userCompany" v-show="!flag">
+          <FormItem prop="userCompany" class="userCompany" v-if="!flag">
             <Input size="large"  placeholder="请输入公司名称" v-model="formItem.userCompany" type="text">
               <Icon type="ios-home"  slot="prefix"/>
             </Input>
@@ -75,19 +75,22 @@ export default {
       this.$refs[name].validate((valid) => {
         if (valid) {
           // 校验成功 发起请求
-          this.axios.get(this.api.baseUrl + "/user/login" + "/" + this.formItem.username + "/" + this.formItem.password).then((res) => {
+          this.axios.get(this.api.baseUrl + "/user/login" + "/" + this.formItem.userName + "/" + this.formItem.userPassWord).then((res) => {
                 let code = res.data.code;
                 let msg = res.data.msg;
                 if (code === 200) {
                   that.$Message.success(msg);
-                  this.$cookies.set("userName", this.formItem.username);
+                  this.$cookies.set("userName", this.formItem.userName);
+                  this.$cookies.set("userCompany",res.data.data.userCompanyID);
+                  this.$cookies.set("userOwner", res.data.data.userOwner);
                   //如果登录成功进行转
-                  let role = JSON.parse(JSON.stringify(res.data.data.userRole));
-                  if (role===0){
-                    that.$router.push("/mainPage");
-                  }else if (role===1){
-                    that.$router.push("/mainPage");
-                  }
+                  // let role = JSON.parse(JSON.stringify(res.data.data.userRole));
+                  // if (role===0){
+                  //   that.$router.push("/mainPage");
+                  // }else if (role===1){
+                  //   that.$router.push("/mainPage");
+                  // }
+                  that.$router.push("/mainPage");
                 } else {
                     // todo 登录失败处理
                     that.$Message.error(msg);
@@ -110,14 +113,15 @@ export default {
       this.$refs[name].validate((valid) => {
         if (valid) {
           // 校验成功 发起请求
-          this.formItem.userRole = 0;
           this.axios.put(this.api.baseUrl + "/user/register",this.formItem).then((res) => {
             let code = res.data.code;
             let msg = res.data.msg;
             if (code === 200) {
               that.$Message.success(msg);
               //如果登录成功进行转
-              that.$router.push("/userInformation");
+              this.$cookies.set("userCompany",res.data.data.userCompanyID);
+              this.$cookies.set("userOwner", res.data.data.userOwner);
+              that.$router.push("/mainPage");
               this.flag = true;
             } else {
               // todo 登录失败处理

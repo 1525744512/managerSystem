@@ -19,7 +19,7 @@
             <Icon type="ios-search"></Icon>
             <span>搜索</span>
           </MenuItem>
-          <MenuItem name="1-5" >
+          <MenuItem name="1-5" v-show="isOwnerFlag" @click.native="openInviteMembers">
             <Icon type="md-person-add"></Icon>
             <span>邀请用户</span>
           </MenuItem>
@@ -30,18 +30,44 @@
         </Menu>
       </Col>
       <router-view></router-view>
+      <inviteMembers title="测试窗口" v-if="openDialog" ref="inviteMembers"/>
     </Row>
   </div>
 </template>
 
 <script>
+import inviteMembers from "@/components/inviteMembers";
+
 export default {
   name: "mainPage",
+  components: {inviteMembers},
+  data(){
+    return{
+      openDialog:false,
+      isOwnerFlag:false,
+    }
+  },
   methods:{
     push(name){
       this.$router.push(name);
+    },
+    openInviteMembers(){
+      this.openDialog = true;
+      this.$nextTick(() => {
+        this.$refs.inviteMembers.init(this.$cookies.get("userCompany"));
+      });
+    },
+    isOwner(){
+      if (this.$cookies.get("userOwner")==="1"){
+        this.isOwnerFlag = true;
+      }
     }
+  },
+  created() {
+    this.isOwner();
+
   }
+
 }
 </script>
 
