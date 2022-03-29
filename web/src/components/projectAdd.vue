@@ -1,7 +1,6 @@
 <template>
   <modal v-model="modal"
          title="新建项目" @on-ok="ok"  @on-cancel="cancel">
-    <Layout style="height: 50vh;">
       <Form ref="formItem" :model="formItem" :rules="ruleValidate" :label-width="0">
           <label>项目名称</label>
           <Input v-model="formItem.projectName" placeholder="项目名称" style="width: 100%;margin-top: 0.5%;margin-bottom: 1.5%"/>
@@ -48,7 +47,6 @@
             </Col>
           </row>
       </Form>
-    </Layout>
     <div slot="footer">
       <Button type="text" @click="cancel">取消</Button>
       <Button type="primary" @click="ok">确定</Button>
