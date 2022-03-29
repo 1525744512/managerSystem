@@ -2,10 +2,9 @@
   <modal v-model="modal"
          title="创建任务">
     <Layout style="height: 70vh">
-      <Content>
-        <Content style="margin: 3.5%">
+        <Form style="margin: 3.5%" ref="formItem" :model="formItem" :rules="ruleValidate" :label-width="0">
           <label>标题</label>
-          <Input v-model="title" placeholder="请输入标题" style="width: 100%;margin-top: 0.5%;margin-bottom: 1.5%"/>
+          <Input v-model="formItem.taskName" placeholder="请输入标题" style="width: 100%;margin-top: 0.5%;margin-bottom: 1.5%"/>
           <row>
             <Col span="12">
               <label>选择项目</label>
@@ -16,12 +15,12 @@
           </row>
           <row style="margin-bottom: 1.5%;margin-top: 0.5%;">
             <Col span="12">
-              <Select v-model="workChoose" clearable style="width: 95%">
+              <Select v-model="formItem.workChooseID" clearable style="width: 95%">
                 <Option v-for="item in work" :value="item.value" :key="item.value">{{ item.label }}</Option>
               </Select>
             </Col>
             <Col span="12">
-              <DatePicker type="date" placeholder="任务截至时间" style="width: 95%;margin-left: 5%"></DatePicker>
+              <DatePicker v-model="formItem.taskEndTime"  type="date" placeholder="任务截至时间" style="width: 95%;margin-left: 5%"></DatePicker>
             </Col>
           </row>
           <row>
@@ -39,7 +38,7 @@
               <label style="margin-top: 2%">吉磊</label>
             </Col>
             <Col span="12">
-              <Select v-model="usersChoose" multiple filterable :max-tag-count="2"
+              <Select v-model="formItem.usersChoose" multiple filterable :max-tag-count="2"
                       :max-tag-placeholder="maxTagPlaceholder"
                       style="width: 95%;margin-left: 5%">
                 <Option v-for="item in users" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -51,15 +50,14 @@
           </row>
           <row style="margin-bottom: 1.5%;margin-top: 0.5%;">
             <quill-editor
-                v-model="content"
+                v-model="formItem.content"
                 ref="myQuillEditor"
                 :options="editorOption"
                 @blur="onEditorBlur($event)" @focus="onEditorFocus($event)"
                 @change="onEditorChange($event)">
             </quill-editor>
           </row>
-        </Content>
-      </Content>
+        </Form>
     </Layout>
   </modal>
 </template>
@@ -69,7 +67,16 @@ export default {
   name: "workAdd",
   data() {
     return {
-      title: '',
+      formItem:{
+        taskName: '',
+        workChooseID: '',
+        taskEndTime:'',
+        usersChoose:[],
+        content:'',
+      },
+      ruleValidate:{
+
+      },
       work: [
         {
           value: '熟悉项目应用',
@@ -102,9 +109,6 @@ export default {
           label: '用户4'
         }
       ],
-      workChoose: '',
-      usersChoose: [],
-      content:null,
       editorOption:{},
       modal:false,
     }

@@ -2,10 +2,9 @@
   <modal v-model="modal"
          title="新建项目">
     <Layout style="height: 50vh;">
-      <Content style="width: 100%">
-        <Content style="margin: 3.5%;">
+      <Form ref="formItem" :model="formItem" :rules="ruleValidate" :label-width="0">
           <label>项目名称</label>
-          <Input v-model="title" placeholder="项目名称" style="width: 100%;margin-top: 0.5%;margin-bottom: 1.5%"/>
+          <Input v-model="formItem.projectName" placeholder="项目名称" style="width: 100%;margin-top: 0.5%;margin-bottom: 1.5%"/>
           <row>
             <Col span="12">
               <label>可见范围</label>
@@ -16,12 +15,12 @@
           </row>
           <row style="margin-bottom: 1.5%;margin-top: 0.5%;">
             <Col span="12">
-              <Select v-model="workChoose" clearable style="width: 95%">
+              <Select v-model="formItem.workChoose" clearable style="width: 95%">
                 <Option v-for="item in Range" :value="item.value" :key="item.value">{{ item.label }}</Option>
               </Select>
             </Col>
             <Col span="12">
-              <Select v-model="projectChoose" filterable  clearable style="width: 95%;margin-left: 5%;" >
+              <Select v-model="formItem.projectChoose" filterable  clearable style="width: 95%;margin-left: 5%;" >
                 <Option v-for="item in grouping" :value="item.value" :key="item.value">{{ item.label }}</Option>
               </Select>
             </Col>
@@ -32,7 +31,7 @@
             </Col>
           </row>
           <row>
-            <Input v-model="value6" type="textarea" :rows="4" placeholder="本项目是..." />
+            <Input v-model="formItem.projectDescribe" type="textarea" :rows="4" placeholder="本项目是..." />
           </row>
           <row style="margin-top: 1.5%;">
             <Col span="12">
@@ -41,15 +40,14 @@
           </row>
           <row style="margin-bottom: 1.5%;margin-top: 0.5%;">
             <Col span="12">
-              <Select v-model="usersChoose" multiple filterable :max-tag-count="2"
+              <Select v-model="formItem.usersChoose" multiple filterable :max-tag-count="2"
                       :max-tag-placeholder="maxTagPlaceholder"
                       style="width: 95%;">
                 <Option v-for="item in users" :value="item.value" :key="item.value">{{ item.label }}</Option>
               </Select>
             </Col>
           </row>
-        </Content>
-      </Content>
+      </Form>
     </Layout>
   </modal>
 </template>
@@ -59,7 +57,16 @@ export default {
   name: "projectAdd",
   data() {
     return {
-      title: '',
+      formItem:{
+        projectName:'',
+        workChoose:'',
+        projectChoose:'',
+        projectDescribe:'',
+        usersChoose:[],
+      },
+      ruleValidate:{
+
+      },
       Range: [
         {
           value: '私有：加入的成员可见',
@@ -98,8 +105,6 @@ export default {
           label: '用户4'
         }
       ],
-      workChoose: '',
-      projectChoose: '',
       usersChoose: [],
       content:null,
       editorOption:{},
