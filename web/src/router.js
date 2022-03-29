@@ -1,5 +1,6 @@
 import Vue from "vue";
 import VueRouter from 'vue-router'
+
 const originalPush = VueRouter.prototype.push
 
 VueRouter.prototype.push = function push(location) {
@@ -15,52 +16,70 @@ import index from "@/components/index";
 import project from "@/components/project";
 import workAdd from "@/components/workAdd";
 import projectAdd from "@/components/projectAdd";
-const routes=[
+import allProjects from "@/components/allProjects";
+import projectView from "@/components/projectView";
+
+const routes = [
     {
         path: '/Login',
-        name:'Login',
+        name: 'Login',
         component: Login
     },
     {
-        path:'',
-        name:'index',
-        redirect:{path:'/Login'}
+        path: '',
+        name: 'index',
+        redirect: {path: '/Login'}
     },
     {
         path: '/userInformation',
-        name:'userInformation',
+        name: 'userInformation',
         component: userInformation
     },
     {
         path: '/backIndex',
-        name:'backIndex',
+        name: 'backIndex',
         component: backIndex
     },
     {
         path: '/workAdd',
-        name:'workAdd',
+        name: 'workAdd',
         component: workAdd
     },
     {
         path: '/projectAdd',
-        name:'projectAdd',
+        name: 'projectAdd',
         component: projectAdd
     },
+
     {
         path: '/mainPage',
         name: 'mainPage',
         component: mainPage,
-        redirect: {path:'/index'},
+        redirect: {path: '/index'},
         children: [
             {
                 path: '/index',
-                name:'index',
+                name: 'index',
                 component: index,
+            },
+            {
+                path: '/projectView',
+                name: 'projectView',
+                component: projectView
             },
             {
                 path: '/project',
                 name: 'project',
-                component: project
+                component: project,
+                redirect: {path: '/allProjects'},
+                children: [
+                    {
+                        path: '/allProjects',
+                        name: 'allProjects',
+                        component: allProjects
+                    },
+                ]
+
             },
             // {
             //     path: '/showresT',
@@ -86,8 +105,8 @@ const routes=[
     },
 
 ]
-const router=new VueRouter({
-    mode:"history",
+const router = new VueRouter({
+    mode: "history",
     routes
 })
 export default router

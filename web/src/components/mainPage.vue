@@ -4,8 +4,8 @@
       <Col span="1.5">
         <Menu active-name="1-1" theme="dark" width="auto" style="height: 100vh">
           <MenuItem name="1-1" @click.native="push('/index')">
-              <Icon type="md-home"></Icon>
-              <span>工作台</span>
+            <Icon type="md-home"></Icon>
+            <span>工作台</span>
           </MenuItem>
           <MenuItem name="1-2" @click.native="push('/project')">
             <Icon type="ios-cube-outline"></Icon>
@@ -30,15 +30,15 @@
         </Menu>
       </Col>
 
-<!--      新建弹出框-->
+      <router-view></router-view>
+      <!--      新建弹出框-->
       <Drawer title="新建" :closable="false" v-model="value1" width="9%">
         <Button type="text" @click="addProject">新建项目</Button>
         <project-add v-if="flag2" ref="projectAdd"></project-add>
 
         <Button type="text" @click="add">新建任务</Button>
-        <workAdd  v-if="flag" ref="workAdd"></workAdd>
+        <workAdd v-if="flag" ref="workAdd"></workAdd>
       </Drawer>
-      <router-view></router-view>
       <inviteMembers title="测试窗口" v-if="openDialog" ref="inviteMembers"/>
     </Row>
   </div>
@@ -48,61 +48,69 @@
 import workAdd from "@/components/workAdd"
 import projectAdd from "@/components/projectAdd";
 import inviteMembers from "@/components/inviteMembers";
+// import Utils from '../assets/util.js';
+
+
 export default {
   name: "mainPage",
-  components:{workAdd,projectAdd,inviteMembers},
-  data () {
+  components: {workAdd, projectAdd, inviteMembers},
+  data() {
     return {
       value1: false,
       flag: false,
       flag2: false,
-      openDialog:false,
-      isOwnerFlag:false,
+      openDialog: false,
+      isOwnerFlag: false,
     }
   },
-  methods:{
-    push(name){
+  methods: {
+    push(name) {
       this.$router.push(name);
     },
-    add () {
+    add() {
       this.flag = true;
       this.$nextTick(() => {
         this.$refs.workAdd.init();
       });
     },
-    addProject () {
+    addProject() {
       this.flag2 = true;
       this.$nextTick(() => {
         this.$refs.projectAdd.init();
       });
     },
-    openInviteMembers(){
+    openInviteMembers() {
       this.openDialog = true;
       this.$nextTick(() => {
         this.$refs.inviteMembers.init(this.$cookies.get("userCompany"));
       });
     },
-    isOwner(){
-      if (this.$cookies.get("userOwner")==="1"){
+    isOwner() {
+      if (this.$cookies.get("userOwner") === "1") {
         this.isOwnerFlag = true;
       }
     }
   },
   created() {
     this.isOwner();
-
-  }
+  },
+  // mounted(){
+  //   var that = this;
+  //   Utils.$on('demo', function () {
+  //     that.push('/projectView')
+  //   })
+  // },
 }
 </script>
 
 <style scoped>
-.layout{
+.layout {
   background: #f5f7f9;
   overflow: hidden;
   height: 100vh;
 }
 
-.menu-item span{
+.menu-item span {
   display: inline-block;
   overflow: hidden;
   width: 69px;
@@ -111,17 +119,20 @@ export default {
   vertical-align: bottom;
   transition: width .2s ease .2s;
 }
-.menu-item i{
+
+.menu-item i {
   transform: translateX(0px);
   transition: font-size .2s ease, transform .2s ease;
   vertical-align: middle;
   font-size: 16px;
 }
-.collapsed-menu span{
+
+.collapsed-menu span {
   width: 0;
   transition: width .2s ease;
 }
-.collapsed-menu i{
+
+.collapsed-menu i {
   transform: translateX(5px);
   transition: font-size .2s ease .2s, transform .2s ease .2s;
   vertical-align: middle;
