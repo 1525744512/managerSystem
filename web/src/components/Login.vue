@@ -80,16 +80,9 @@ export default {
                 let msg = res.data.msg;
                 if (code === 200) {
                   that.$Message.success(msg);
-                  this.$cookies.set("userName", this.formItem.userName);
+                  this.$cookies.set("userID", res.data.data.userID);
                   this.$cookies.set("userCompany",res.data.data.userCompanyID);
                   this.$cookies.set("userOwner", res.data.data.userOwner);
-                  //如果登录成功进行转
-                  // let role = JSON.parse(JSON.stringify(res.data.data.userRole));
-                  // if (role===0){
-                  //   that.$router.push("/mainPage");
-                  // }else if (role===1){
-                  //   that.$router.push("/mainPage");
-                  // }
                   that.$router.push("/mainPage");
                 } else {
                     // todo 登录失败处理
@@ -119,6 +112,7 @@ export default {
             if (code === 200) {
               that.$Message.success(msg);
               //如果登录成功进行转
+              this.$cookies.set("userID", res.data.data.userID);
               this.$cookies.set("userCompany",res.data.data.userCompanyID);
               this.$cookies.set("userOwner", res.data.data.userOwner);
               that.$router.push("/mainPage");
