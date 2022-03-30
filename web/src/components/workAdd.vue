@@ -75,6 +75,7 @@ export default {
       formItem:{
         taskName: '',
         projectID: '',
+        userCompanyID:'',
         taskEndTime:'',
         taskLeader:'',
         userID:[],
@@ -157,6 +158,7 @@ export default {
       const that = this;
       if (this.formItem.taskName!==""||this.formItem.projectID!==null) {
         // 校验成功 发起请求
+        this.formItem.userCompanyID = this.$cookies.get("userCompany");
         this.axios.post(this.api.baseUrl + "/task/addTask",this.formItem).then((res) => {
           let code = res.data.code;
           let msg = res.data.msg;
