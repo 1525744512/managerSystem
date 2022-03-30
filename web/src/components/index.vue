@@ -14,26 +14,26 @@
         <Button type="primary"  slot="title" icon="ios-add" style="float: right;width: 35px;height: 35px;" @click="add"></Button>
         <workAdd v-if="flag" ref="workAdd"></workAdd>
         <Scroll height="535" :on-reach-edge="handleReachEdge">
-          <Menu :theme="theme2" style="width: 100%">
-            <Submenu name="1">
-              <template slot="title">
-                未完成
-              </template>
-              <MenuItem :name="item.value" v-for="(item, index) in task" :value="item.value" :key="index" @click.native="open">{{item.label}} <Tag color="red" style="float: right">{{item.taskEndTime}}</Tag></MenuItem>
-            </Submenu>
-            <Submenu name="2">
-              <template slot="title">
-                已完成
-              </template>
-              <MenuItem :name="item.value" v-for="(item, index) in successTask" :value="item.value" :key="index" @click.native="open">{{item.label}} <Tag color="red" style="float: right">{{item.taskEndTime}}</Tag></MenuItem>
-            </Submenu>
-            <Submenu name="3">
-              <template slot="title">
-                其他
-              </template>
-              <MenuItem :name="item.value" v-for="(item, index) in task1" :value="item.value" :key="index" @click.native="open">{{item.label}} <Tag color="red" style="float: right">{{item.taskEndTime}}</Tag></MenuItem>
-            </Submenu>
-        </Menu>
+            <Menu :theme="theme2" style="width: 100%">
+              <Submenu name="1">
+                <template slot="title">
+                  未完成
+                </template>
+                <MenuItem :name="item.value" v-for="(item, index) in task" :value="item.value" :key="index" @click.native="open">{{item.label}} <Tag color="red" style="float: right">{{item.taskEndTime}}</Tag></MenuItem>
+              </Submenu>
+              <Submenu name="2">
+                <template slot="title">
+                  已完成
+                </template>
+                <MenuItem :name="item.value" v-for="(item, index) in successTask" :value="item.value" :key="index" @click.native="open">{{item.label}} <Tag color="red" style="float: right">{{item.taskEndTime}}</Tag></MenuItem>
+              </Submenu>
+              <Submenu name="3">
+                <template slot="title">
+                  其他
+                </template>
+                <MenuItem :name="item.value" v-for="(item, index) in task1" :value="item.value" :key="index" @click.native="open">{{item.label}} <Tag color="red" style="float: right">{{item.taskEndTime}}</Tag></MenuItem>
+              </Submenu>
+          </Menu>
         </Scroll>
         <work-view v-if="flag2" ref="workView"></work-view>
       </card>
@@ -68,7 +68,6 @@ export default {
       });
     },
     open(){
-      // window.alert("1")
       this.flag2 = true;
       this.$nextTick(() => {
         this.$refs.workView.init();

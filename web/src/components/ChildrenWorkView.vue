@@ -7,8 +7,7 @@
         <Button type="text" @click="close">返回父任务</Button>
       </BreadcrumbItem>
     </Breadcrumb>
-    <Layout style="height: 80vh;">
-      <Form style="margin: 3.5%;" ref="formItem" :model="formItem" :rules="ruleValidate" :label-width="0">
+      <Form ref="formItem" :model="formItem" :rules="ruleValidate" :label-width="0">
         <label>标题</label>
         <Input v-model="formItem.workName" placeholder="具体工作" />
         <row style="margin-top: 1.5%">
@@ -92,7 +91,6 @@
           </Tabs>
         </row>
       </Form>
-    </Layout>
   </modal>
 </template>
 

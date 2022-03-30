@@ -5,7 +5,9 @@
     <Button type="primary" icon="md-add" @click="add" style="float: right">新建项目</Button>
     <project-add v-if="flag" ref="projectAdd"></project-add>
     <Table stripe :columns="columns1" :data="data1" style="margin-top: 2%;width: 100%" @on-row-click="open">
-
+<!--      <template slot-scope="{ row }" slot="projectName">-->
+<!--        <strong>{{ row.projectName }}</strong>-->
+<!--      </template>-->
     </Table>
   </Card>
 </template>
@@ -19,66 +21,57 @@ export default {
   data() {
     return {
       columns1: [
+        // {
+        //   type: 'index',
+        //   width: 60,
+        //   align: 'center'
+        // },
         {
           title: '项目名称',
-          key: 'name'
+          key: 'projectName',
+          render: (h, params) => {
+            return h('div', params.row.projectName);
+          }
         },
         {
           title: '所属分组',
-          key: 'group'
+          key: 'departmentID',
+          render: (h, params) => {
+            return h('div', params.row.departmentID);
+          }
         },
         {
           title: '项目负责人',
-          key: 'personLiable'
+          key: 'projectLeader',
+          render: (h, params) => {
+            return h('div', params.row.projectLeader);
+          }
         },
         {
           title: '项目状态',
-          key: 'state'
+          key: 'projectStatus',
+          render: (h, params) => {
+            return h('div', params.row.projectStatus);
+          }
         },
         {
-          title: '任务进度',
-          key: 'plan'
+          title: '任务进度(%)',
+          key: 'projectSchedule',
+          render: (h, params) => {
+            return h('div', params.row.projectSchedule);
+          }
         },
         {
           title: '创建时间',
-          key: 'time'
+          key: 'projectCreatorTime',
+          render: (h, params) => {
+            return h('div', params.row.projectCreatorTime);
+          }
         }
       ],
-      data1: [
-        {
-          name: '1',
-          group: '1组',
-          personLiable: '吉磊',
-          state: '正常',
-          plan: '10%',
-          time: '2016-10-03'
-        },
-        {
-          name: '2',
-          group: '2组',
-          personLiable: '吉磊',
-          state: '正常',
-          plan: '10%',
-          time: '2016-10-03'
-        },
-        {
-          name: '3',
-          group: '3组',
-          personLiable: '吉磊',
-          state: '正常',
-          plan: '10%',
-          time: '2016-10-03'
-        },
-        {
-          name: '4',
-          group: '4组',
-          personLiable: '吉磊',
-          state: '正常',
-          plan: '10%',
-          time: '2016-10-03'
-        }
-      ],
+      data1: [],
       flag: false,
+      department:[],
     }
   },
   methods: {
@@ -91,7 +84,32 @@ export default {
     open() {
       this.$router.push('/projectView')
       // Utils.$emit('demo','msg');
-    }
+    },
+    getPersonalProject(){
+      let data = [];
+      this.axios.get(this.api.baseUrl + '/project/getProject/'+this.$cookies.get("userID")+'/'+this.$cookies.get("userCompany")).then((res) => {
+        let msg = res.data.msg;
+        let code = res.data.code;
+        if (code === 200) {
+          for (let i = 0; i < res.data.data.length;i++){
+            data.push({
+              projectName: JSON.parse(JSON.stringify(res.data.data[i].projectName)),
+              departmentID:  JSON.parse(JSON.stringify(res.data.data[i].departmentName)),
+              projectLeader:  JSON.parse(JSON.stringify(res.data.data[i].projectLeader)),
+              projectStatus:  JSON.parse(JSON.stringify(res.data.data[i].projectStatus)),
+              projectSchedule:  JSON.parse(JSON.stringify(res.data.data[i].projectSchedule))*100,
+              projectCreatorTime:  JSON.parse(JSON.stringify(res.data.data[i].projectCreatorTime)),
+            })
+          }
+        }else {
+          this.$Message.error(msg);
+        }
+      });
+      return data;
+    },
+  },
+  created() {
+    this.data1 = this.getPersonalProject();
   }
 }
 </script>
