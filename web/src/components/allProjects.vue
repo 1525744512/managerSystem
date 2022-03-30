@@ -1,31 +1,27 @@
 <template>
   <Card :bordered="false" style="height: 86vh;margin: 20px">
     <p slot="title">全部项目</p>
-    <Input search placeholder="搜索项目(按Enter搜索)" style="width: 50vh"/>
+    <Input search placeholder="搜索项目(按Enter搜索)" style="width: 50vh" v-model="searchProject" @keyup.enter.native="search" @input="search"/>
     <Button type="primary" icon="md-add" @click="add" style="float: right">新建项目</Button>
     <project-add v-if="flag" ref="projectAdd"></project-add>
-    <Table stripe :columns="columns1" :data="data1" style="margin-top: 2%;width: 100%" @on-row-click="open">
-<!--      <template slot-scope="{ row }" slot="projectName">-->
-<!--        <strong>{{ row.projectName }}</strong>-->
-<!--      </template>-->
+    <Table stripe :columns="columns1" :data="data2" v-model="data1" style="margin-top: 2%;width: 100%" @on-row-click="open">
     </Table>
   </Card>
 </template>
 
 <script>
 import projectAdd from "@/components/projectAdd";
-
 export default {
   name: "allProjects",
   components: {projectAdd},
   data() {
     return {
       columns1: [
-        // {
-        //   type: 'index',
-        //   width: 60,
-        //   align: 'center'
-        // },
+        {
+          type: 'index',
+          width: 60,
+          align: 'center'
+        },
         {
           title: '项目名称',
           key: 'projectName',
@@ -70,8 +66,9 @@ export default {
         }
       ],
       data1: [],
+      data2:this.getPersonalProject(),
       flag: false,
-      department:[],
+      searchProject:null,
     }
   },
   methods: {
@@ -107,6 +104,20 @@ export default {
       });
       return data;
     },
+    search(){
+      let _search = this.searchProject.toString().toLowerCase();
+      let newListData = []; //  用于存放搜索出来数据的新数组
+      if (_search!==null) {
+        this.data1.filter(item => {
+          if (item.projectName.toLowerCase().indexOf(_search) !== -1) {
+            newListData.push(item);
+          }
+        })
+        this.data2 = newListData;
+      }else {
+        this.data2 =this.data1;
+      }
+    }
   },
   created() {
     this.data1 = this.getPersonalProject();
