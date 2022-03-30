@@ -50,7 +50,6 @@ const routes = [
         name: 'projectAdd',
         component: projectAdd
     },
-
     {
         path: '/mainPage',
         name: 'mainPage',

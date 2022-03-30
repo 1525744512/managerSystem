@@ -35,6 +35,7 @@
             </Submenu>
         </Menu>
         </Scroll>
+        <work-view v-if="flag2" ref="workView"></work-view>
       </card>
     </content>
   </Layout>
@@ -42,16 +43,18 @@
 
 <script>
 import workAdd from "@/components/workAdd"
+import workView from "@/components/workView";
 export default {
   name: "index",
-  components:{workAdd},
+  components:{workAdd,workView},
   data () {
     return{
       flag: false,
+      flag2:false,
       task: [],
       successTask: [],
       task1: [],
-      theme2: 'light',
+      theme2: 'light'
     }
   },
   methods:{
@@ -65,7 +68,11 @@ export default {
       });
     },
     open(){
-      window.alert("1")
+      // window.alert("1")
+      this.flag2 = true;
+      this.$nextTick(() => {
+        this.$refs.workView.init();
+      });
     },
     handleReachEdge (dir) {
       return new Promise(resolve => {
@@ -97,30 +104,30 @@ export default {
                   value:JSON.parse(JSON.stringify(res.data.data[i].taskID)),
                   label:JSON.parse(JSON.stringify(res.data.data[i].taskName)),
                   taskEndTime: JSON.parse(JSON.stringify(res.data.data[i].taskEndTime))
-                })
-              }else if (res.data.data[i].taskStatus===0){
-                this.task.push({
-                  value:JSON.parse(JSON.stringify(res.data.data[i].taskID)),
-                  label:JSON.parse(JSON.stringify(res.data.data[i].taskName)),
+                 })
+               }else if (res.data.data[i].taskStatus===0){
+                 this.task.push({
+                   value:JSON.parse(JSON.stringify(res.data.data[i].taskID)),
+                   label:JSON.parse(JSON.stringify(res.data.data[i].taskName)),
+                   taskEndTime: JSON.parse(JSON.stringify(res.data.data[i].taskEndTime))
+                 })
+               }else {
+                 this.task1.push({
+                   value:JSON.parse(JSON.stringify(res.data.data[i].taskID)),
+                   label:JSON.parse(JSON.stringify(res.data.data[i].taskName)),
                   taskEndTime: JSON.parse(JSON.stringify(res.data.data[i].taskEndTime))
-                })
-              }else {
-                this.task1.push({
-                  value:JSON.parse(JSON.stringify(res.data.data[i].taskID)),
-                  label:JSON.parse(JSON.stringify(res.data.data[i].taskName)),
-                  taskEndTime: JSON.parse(JSON.stringify(res.data.data[i].taskEndTime))
-                })
-              }
-            }
-        } else {
-            // todo 登录失败处理
-            that.$Message.error(msg);
+                 })
+               }
+             }
+         } else {
+             // todo 登录失败处理
+             that.$Message.error(msg);
         }
-      }).catch(function() {
-          //todo 接口访问异常处理
-        that.$Message.error("新建任务接口访问失败!");
-      });
-    }
+       }).catch(function() {
+           //todo 接口访问异常处理
+         that.$Message.error("新建任务接口访问失败!");
+       });
+     }
   },
   created() {
     this.getTask();
