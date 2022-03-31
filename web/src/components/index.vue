@@ -5,7 +5,6 @@
         <div style="float:left;margin-left: 2%;text-align: center;height: 8vh;display: inline-block;">
           <span>我的工作台</span>
         </div>
-          <Button icon="ios-sync" type="text" @click="update" style="margin-left:1%"></Button>
       </div>
     </Header>
     <content :style="{padding: '20px',background: '#e5ecfc',height:'92vh'}">
@@ -13,7 +12,7 @@
         <p slot="title">我的任务</p>
         <Button type="primary"  slot="title" icon="ios-add" style="float: right;width: 35px;height: 35px;" @click="add"></Button>
         <workAdd v-if="flag" ref="workAdd"></workAdd>
-        <Scroll height="535" :on-reach-edge="handleReachEdge">
+        <Scroll height="535">
             <Menu :theme="theme2" style="width: 100%">
               <Submenu name="1">
                 <template slot="title">
@@ -71,24 +70,6 @@ export default {
       this.flag2 = true;
       this.$nextTick(() => {
         this.$refs.workView.init();
-      });
-    },
-    handleReachEdge (dir) {
-      return new Promise(resolve => {
-        setTimeout(() => {
-          if (dir > 0) {
-            const first = this.task[0];
-            for (let i = 1; i < 5; i++) {
-              this.first.unshift(first-i);
-            }
-          } else {
-            const last = this.task[this.task.length - 1];
-            for (let i = 1; i < 5; i++) {
-              this.first.push(last + i);
-            }
-          }
-          resolve();
-        }, 2000);
       });
     },
     getTask(){

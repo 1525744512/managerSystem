@@ -1,61 +1,62 @@
 <template>
-  <modal v-model="modal"
-         title="个人事务安排" width="750vh">
+  <modal v-model="modal" title="个人任务详情" width="60" :styles="{top: '20px'}">
       <Form ref="formItem" :model="formItem" :rules="ruleValidate" :label-width="0">
         <label>标题</label>
-        <Input v-model="formItem.workName" placeholder="具体工作" />
+        <Input v-model="formItem.workName" placeholder="任务标题" />
         <row style="margin-top: 1.5%">
-          <label>任务状态</label>
-          <label style="margin-left: 17%">负责人</label>
-          <label style="margin-left: 19%">开始时间</label>
-          <label style="margin-left: 16.5%">完成时间</label>
+          <Col span="6">
+            <label>任务状态</label>
+          </Col>
+          <Col span="6">
+            <label>负责人</label>
+          </Col>
+          <Col span="6">
+            <label>开始时间</label>
+          </Col>
+          <Col span="6">
+            <label>完成时间</label>
+          </Col>
         </row>
-
         <row style="margin-bottom: 1.5%;margin-top: 0.5%;">
             <Select v-model="formItem.workState" clearable style="width: 24.6%;">
               <Option v-for="item in workstate" :value="item.value" :key="item.value" placeholder="选择状态">{{ item.label }}</Option>
             </Select>
-
             <Select v-model="formItem.workUser" filterable style="width: 24.6%;margin-left: 0.5%">
               <Option v-for="item in workusers" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
-
             <DatePicker v-model="formItem.workStartTime"  type="date" placeholder="任务开始时间" style="width: 24.6%;margin-left: 0.5%"></DatePicker>
-
             <DatePicker v-model="formItem.workEndTime"  type="date" placeholder="任务截至时间" style="width: 24.6%;margin-left: 0.5%"></DatePicker>
         </row>
         <row style="margin-top: 2%">
           <Tabs value="name1" style="width: 100%">
             <TabPane label="任务信息" name="name1">
-              <Col>
-                <label>优先级</label>
-                <label style="margin-left: 40%">标签</label>
-              </Col>
-              <Col>
-                <Select v-model="formItem.Class" filterable style="width: 40%">
-                  <Option v-for="item in classes" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                </Select>
-
-                <Select v-model="formItem.Laber" filterable style="width: 40%;margin-left: 6.2%">
-                  <Option v-for="item in laberes" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                </Select>
-              </Col>
-
-              <Col style="margin-top: 2%">
-                <label>参与人</label>
-              </Col>
-              <Col>
-                <Select v-model="formItem.usersChoose" multiple filterable :max-tag-count="2"
-                        :max-tag-placeholder="maxTagPlaceholder"
-                >
-                  <Option v-for="item in users" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                </Select>
-              </Col>
-
+              <Row>
+                <Col span="12">
+                  <label>优先级</label>
+                </Col>
+                <Col span="12">
+                  <label style="margin-left: 5%">参与人</label>
+                </Col>
+              </Row>
+              <Row>
+                <Col span="12">
+                  <Select v-model="formItem.Class" filterable style="width: 95%">
+                    <Option v-for="item in classes" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                  </Select>
+                </Col>
+                <Col span="12">
+                  <Select v-model="formItem.usersChoose" multiple filterable :max-tag-count="2"
+                          :max-tag-placeholder="maxTagPlaceholder" style="width: 95%;margin-left: 5%"
+                  >
+                    <Option v-for="item in users" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                  </Select>
+                </Col>
+              </Row>
               <row>
-                <label>描述</label>
+                <label style="margin-top: 2%">描述</label>
               </row>
               <row style="margin-bottom: 1.5%;margin-top: 0.5%;height: 100px">
+                <Col>
                 <quill-editor
                     v-model="formItem.content"
                     ref="myQuillEditor"
@@ -63,6 +64,7 @@
                     @blur="onEditorBlur($event)" @focus="onEditorFocus($event)"
                     @change="onEditorChange($event)">
                 </quill-editor>
+                </Col>
               </row>
             </TabPane>
             <TabPane label="子任务" name="name2">
@@ -118,10 +120,6 @@ export default {
         {
           value: '未完成',
           label: '未完成'
-        },
-        {
-          value: '进行中',
-          label: '进行中'
         },
       ],
       workusers: [
@@ -263,8 +261,8 @@ export default {
 }
 </script>
 
-<style scoped>
+<styles scoped>
 .layout-header {
   background-color: #ffffff;
 }
-</style>
+</styles>

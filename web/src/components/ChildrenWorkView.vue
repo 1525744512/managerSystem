@@ -1,11 +1,9 @@
 <template>
   <modal v-model="modal"
-         title="个人事务安排" width="750vh">
+         title="个人事务安排" width="60" :styles="{top: '20px'}">
     <Breadcrumb>
       <BreadcrumbItem>当前任务</BreadcrumbItem>
-      <BreadcrumbItem>
-        <Button type="text" @click="close">返回父任务</Button>
-      </BreadcrumbItem>
+      <BreadcrumbItem @click.native="close">返回父任务</BreadcrumbItem>
     </Breadcrumb>
       <Form ref="formItem" :model="formItem" :rules="ruleValidate" :label-width="0">
         <label>标题</label>
