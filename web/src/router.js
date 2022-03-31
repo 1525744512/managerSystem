@@ -62,11 +62,6 @@ const routes = [
                 component: index,
             },
             {
-                path: '/projectView',
-                name: 'projectView',
-                component: projectView
-            },
-            {
                 path: '/project',
                 name: 'project',
                 component: project,
@@ -75,7 +70,12 @@ const routes = [
                     {
                         path: '/allProjects',
                         name: 'allProjects',
-                        component: allProjects
+                        component: allProjects,
+                    },
+                    {
+                        path: '/projectView',
+                        name: 'projectView',
+                        component: projectView
                     },
                 ]
 
