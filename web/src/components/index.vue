@@ -18,7 +18,7 @@
                 <template slot="title">
                   未完成
                 </template>
-                <MenuItem :name="item.value" v-for="(item, index) in task" :value="item.value" :key="index" @click.native="open">{{item.label}} <Tag color="red" style="float: right">{{item.taskEndTime}}</Tag></MenuItem>
+                <MenuItem :name="item.value" v-for="(item, index) in task" :value="item.value" :key="index" @click.native="open(item.value)">{{item.label}} <Tag color="red" style="float: right">{{item.taskEndTime}}</Tag></MenuItem>
               </Submenu>
               <Submenu name="2">
                 <template slot="title">
@@ -66,10 +66,10 @@ export default {
         this.$refs.workAdd.init();
       });
     },
-    open(){
+    open(value){
       this.flag2 = true;
       this.$nextTick(() => {
-        this.$refs.workView.init();
+        this.$refs.workView.init(value);
       });
     },
     getTask(){

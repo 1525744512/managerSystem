@@ -1,6 +1,6 @@
 <template>
   <modal v-model="modal"
-         title="个人事务安排" width="60" :styles="{top: '20px'}">
+         title="个人事务安排" width="60" :styles="{top: '10px'}">
     <Breadcrumb>
       <BreadcrumbItem>当前任务</BreadcrumbItem>
       <BreadcrumbItem @click.native="close">返回父任务</BreadcrumbItem>
@@ -242,6 +242,7 @@ export default {
   methods: {
     init(){
       this.modal =true;
+
     },
     maxTagPlaceholder(num) {
       return 'more ' + num;
