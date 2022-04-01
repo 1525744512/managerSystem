@@ -4,8 +4,7 @@
     <Input search placeholder="搜索项目(按Enter搜索)" style="width: 50vh" v-model="searchProject" @keyup.enter.native="search" @input="search"/>
     <Button type="primary" icon="md-add" @click="add" style="float: right">新建项目</Button>
     <project-add v-if="flag" ref="projectAdd"></project-add>
-    <Table stripe :columns="columns1" :data="data2" v-model="data1" style="margin-top: 2%;width: 100%" @on-row-click="open">
-    </Table>
+    <Table stripe :columns="columns1" :data="data2" v-model="data1" style="margin-top: 2%;width: 100%" @on-row-click="open"></Table>
   </Card>
 </template>
 

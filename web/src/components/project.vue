@@ -1,15 +1,32 @@
 <template>
   <Layout style="background-color: #ffffff;width: 50%;height: 100vh">
     <Sider ref="side1" hide-trigger collapsible :collapsed-width="78" v-model="isCollapsed">
-      <Menu active-name="1-2" width="auto" :class="menuitemClasses">
-        <MenuItem name="1-1">
-          <Icon type="ios-navigate"></Icon>
-          <span>我的任务</span>
-        </MenuItem>
-        <MenuItem name="1-2" @click="open">
+      <Menu active-name="1-3" width="auto" :class="menuitemClasses">
+        <!--        <MenuItem name="1-1" @click.native="openMyWork">-->
+        <!--          <Icon type="ios-navigate" ></Icon>-->
+        <!--          <span>我的任务</span>-->
+        <!--        </MenuItem>-->
+        <MenuItem name="1-2" @click.native="open">
           <Icon type="ios-search"></Icon>
           <span>全部项目</span>
         </MenuItem>
+        <Submenu name="1-1">
+          <template slot="title">
+            <Icon type="ios-paper"/>
+            我的任务
+          </template>
+          <MenuItem name="1-1-1" @click.native="openMyWork">我负责的</MenuItem>
+          <MenuItem name="1-1-2" @click.native="openMyJoin">我参与的</MenuItem>
+          <MenuItem name="1-1-3" @click.native="openMyCreate">我创建的</MenuItem>
+        </Submenu>
+        <Submenu name="1-3">
+          <template slot="title">
+            <Icon type="ios-paper"/>
+            报表
+          </template>
+          <MenuItem name="1-3-1" @click.native="openProjectReport">项目报表</MenuItem>
+          <MenuItem name="1-3-2" @click.native="openMemberReport">成员报表</MenuItem>
+        </Submenu>
       </Menu>
     </Sider>
     <Layout style="height: 100vh">
@@ -54,7 +71,22 @@ export default {
       this.$refs.side1.toggleCollapse();
     },
     open() {
-      this.$router.push('/allProjects')
+      this.$router.push('/allProjects');
+    },
+    openMyWork() {
+      this.$router.push('/myWorkResponsible');
+    },
+    openMyJoin() {
+      this.$router.push('/myWorkJoin');
+    },
+    openMyCreate() {
+      this.$router.push('/myWorkCreate');
+    },
+    openProjectReport() {
+      this.$router.push('projectReport')
+    },
+    openMemberReport() {
+      this.$router.push('memberReport')
     }
   }
 }

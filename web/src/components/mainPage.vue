@@ -23,7 +23,7 @@
             <Icon type="md-person-add"></Icon>
             <span>邀请用户</span>
           </MenuItem>
-          <MenuItem name="1-6">
+          <MenuItem name="1-6" @click.native="flag3 = true">
             <Icon type="ios-contact"></Icon>
             <span>个人</span>
           </MenuItem>
@@ -33,11 +33,32 @@
       <router-view></router-view>
       <!--      新建弹出框-->
       <Drawer title="新建" :closable="false" v-model="value1" width="9%">
-        <Button type="text" @click="addProject">新建项目</Button>
+        <row>
+          <label @click="addProject"><Icon type="ios-folder" style="margin-right: 0.5vh"/>新建项目</label>
+        </row>
         <project-add v-if="flag2" ref="projectAdd"></project-add>
 
-        <Button type="text" @click="add">新建任务</Button>
+        <row style="margin-top: 2vh">
+          <label @click="add"><Icon type="md-folder" style="margin-right: 0.5vh"/>新建任务</label>
+        </row>
         <workAdd v-if="flag" ref="workAdd"></workAdd>
+      </Drawer>
+
+      <!--      个人弹出框-->
+      <Drawer title="关于" :closable="false" v-model="flag3" width="9%">
+        <row>
+          <label @click="openAccountSettings"><Icon type="md-person" style="margin-right: 0.5vh"/>账号资料设置</label>
+        </row>
+        <account-settings v-if="flag4" ref="accountSettings"></account-settings>
+        <Divider style="width: 100%"/>
+
+        <row>
+          <label @click="openBackstage"> <Icon type="ios-home" style="margin-right: 0.5vh"/>进入企业后台</label>
+        </row>
+
+        <row style="margin-top: 2vh">
+          <label style="color: red" @click="exit"><Icon type="ios-power" style="margin-right: 0.5vh"/>退出当前企业</label>
+        </row>
       </Drawer>
       <inviteMembers title="测试窗口" v-if="openDialog" ref="inviteMembers"/>
     </Row>
@@ -48,17 +69,19 @@
 import workAdd from "@/components/workAdd"
 import projectAdd from "@/components/projectAdd";
 import inviteMembers from "@/components/inviteMembers";
-// import Utils from '../assets/util.js';
+import accountSettings from "@/components/accountSettings";
 
 
 export default {
   name: "mainPage",
-  components: {workAdd, projectAdd, inviteMembers},
+  components: {workAdd, projectAdd, inviteMembers,accountSettings},
   data() {
     return {
       value1: false,
       flag: false,
       flag2: false,
+      flag3: false,
+      flag4: false,
       openDialog: false,
       isOwnerFlag: false,
     }
@@ -79,6 +102,12 @@ export default {
         this.$refs.projectAdd.init();
       });
     },
+    openAccountSettings() {
+      this.flag4 = true;
+      this.$nextTick(() => {
+        this.$refs.accountSettings.init();
+      });
+    },
     openInviteMembers() {
       this.openDialog = true;
       this.$nextTick(() => {
@@ -89,17 +118,17 @@ export default {
       if (this.$cookies.get("userOwner") === "1") {
         this.isOwnerFlag = true;
       }
+    },
+    exit() {
+      this.$router.push('/login');
+    },
+    openBackstage() {
+      this.$router.push('backstage');
     }
   },
   created() {
     this.isOwner();
-  },
-  // mounted(){
-  //   var that = this;
-  //   Utils.$on('demo', function () {
-  //     that.push('/projectView')
-  //   })
-  // },
+  }
 }
 </script>
 

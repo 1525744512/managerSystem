@@ -18,6 +18,12 @@ import workAdd from "@/components/workAdd";
 import projectAdd from "@/components/projectAdd";
 import allProjects from "@/components/allProjects";
 import projectView from "@/components/projectView";
+import myWorkJoin from "@/components/myWorkJoin";
+import myWorkCreate from "@/components/myWorkCreate";
+import myWorkResponsible from "@/components/myWorkResponsible";
+import projectReport from "@/components/projectReport";
+import memberReport from "@/components/memberReport";
+import backstage from "@/components/backstage";
 
 const routes = [
     {
@@ -77,8 +83,32 @@ const routes = [
                         name: 'projectView',
                         component: projectView
                     },
+                    {
+                        path: '/myWorkResponsible',
+                        name: 'myWorkResponsible',
+                        component: myWorkResponsible
+                    },
+                    {
+                        path: '/myWorkJoin',
+                        name: 'myWorkJoin',
+                        component: myWorkJoin
+                    },
+                    {
+                        path: '/myWorkCreate',
+                        name: 'myWorkCreate',
+                        component: myWorkCreate
+                    },
+                    {
+                        path: '/projectReport',
+                        name: 'projectReport',
+                        component: projectReport
+                    },
+                    {
+                        path: '/memberReport',
+                        name: 'memberReport',
+                        component: memberReport
+                    },
                 ]
-
             },
             // {
             //     path: '/showresT',
@@ -102,6 +132,11 @@ const routes = [
             // }
         ]
     },
+    {
+        path: '/backstage',
+        name: 'backstage',
+        component: backstage
+    }
 
 ]
 const router = new VueRouter({
