@@ -24,13 +24,13 @@
                 <template slot="title">
                   已完成
                 </template>
-                <MenuItem :name="item.value" v-for="(item, index) in successTask" :value="item.value" :key="index" @click.native="open">{{item.label}} <Tag color="red" style="float: right">{{item.taskEndTime}}</Tag></MenuItem>
+                <MenuItem :name="item.value" v-for="(item, index) in successTask" :value="item.value" :key="index" @click.native="open(item.value)">{{item.label}} <Tag color="red" style="float: right">{{item.taskEndTime}}</Tag></MenuItem>
               </Submenu>
               <Submenu name="3">
                 <template slot="title">
                   其他
                 </template>
-                <MenuItem :name="item.value" v-for="(item, index) in task1" :value="item.value" :key="index" @click.native="open">{{item.label}} <Tag color="red" style="float: right">{{item.taskEndTime}}</Tag></MenuItem>
+                <MenuItem :name="item.value" v-for="(item, index) in task1" :value="item.value" :key="index" @click.native="open(item.value)">{{item.label}} <Tag color="red" style="float: right">{{item.taskEndTime}}</Tag></MenuItem>
               </Submenu>
           </Menu>
         </Scroll>
@@ -57,9 +57,6 @@ export default {
     }
   },
   methods:{
-    update (){
-
-    },
     add () {
       this.flag = true;
       this.$nextTick(() => {

@@ -79,7 +79,7 @@ export default {
     },
     open() {
       this.$router.push('/projectView')
-      // Utils.$emit('demo','msg');
+
     },
     getPersonalProject(){
       let data = [];
