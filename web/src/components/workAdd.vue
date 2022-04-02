@@ -46,7 +46,15 @@
             </Col>
           </row>
           <row>
-            <label>描述</label>
+            <label>优先级</label>
+          </row>
+          <row>
+            <Select v-model="formItem.taskPriority" filterable style="width: 47.5%">
+              <Option v-for="item in Priority" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
+          </row>
+          <row>
+            <label style="margin-top: 1%">描述</label>
           </row>
           <row>
             <Col>
@@ -84,6 +92,7 @@ export default {
         taskLeader:'',
         userID:[],
         taskDescribe:'',
+        taskPriority:'',
       },
       ruleValidate:{
         taskName: [
@@ -93,6 +102,28 @@ export default {
           { required: true, message: '必须选择所属项目', trigger: 'blur' }
         ],
       },
+      Priority: [
+        {
+          value:  4,
+          label: '最高'
+        },
+        {
+          value:  3,
+          label: '较高'
+        },
+        {
+          value:  2,
+          label: '普通'
+        },
+        {
+          value:  1,
+          label: '较低'
+        },
+        {
+          value:  0,
+          label: '最低'
+        },
+      ],
       project: [],
       users: [],
       editorOption:{},
