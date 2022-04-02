@@ -24,6 +24,10 @@ import myWorkResponsible from "@/components/myWorkResponsible";
 import projectReport from "@/components/projectReport";
 import memberReport from "@/components/memberReport";
 import backstage from "@/components/backstage";
+import projectDelayReport from "@/components/projectDelayReport";
+import memberDelayReport from "@/components/memberDelayReport";
+import userManage from "@/components/userManage";
+import roleManage from "@/components/roleManage";
 
 const routes = [
     {
@@ -104,9 +108,19 @@ const routes = [
                         component: projectReport
                     },
                     {
+                        path: '/projectDelayReport',
+                        name: 'projectDelayReport',
+                        component: projectDelayReport
+                    },
+                    {
                         path: '/memberReport',
                         name: 'memberReport',
                         component: memberReport
+                    },
+                    {
+                        path: '/memberDelayReport',
+                        name: 'memberDelayReport',
+                        component: memberDelayReport
                     },
                 ]
             },
@@ -135,7 +149,20 @@ const routes = [
     {
         path: '/backstage',
         name: 'backstage',
-        component: backstage
+        component: backstage,
+        redirect: {path: '/userManage'},
+        children: [
+            {
+                path: '/userManage',
+                name: 'userManage',
+                component: userManage,
+            },
+            {
+                path: '/roleManage',
+                name: 'roleManage',
+                component: roleManage,
+            },
+        ]
     }
 
 ]

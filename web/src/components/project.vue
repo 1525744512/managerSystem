@@ -24,8 +24,28 @@
             <Icon type="ios-paper"/>
             报表
           </template>
-          <MenuItem name="1-3-1" @click.native="openProjectReport">项目报表</MenuItem>
-          <MenuItem name="1-3-2" @click.native="openMemberReport">成员报表</MenuItem>
+          <MenuGroup title="项目报表">
+            <MenuItem name="1-3-1" @click.native="openProjectReport">
+              <Icon type="md-document" />
+              项目进度报表
+            </MenuItem>
+            <MenuItem name="1-3-2" @click.native="openProjectDelayReport">
+              <Icon type="md-chatbubbles" />
+              项目延期报表
+            </MenuItem>
+          </MenuGroup>
+          <MenuGroup title="成员报表">
+            <MenuItem name="1-3-3" @click.native="openMemberReport">
+              <Icon type="md-document" />
+              成员进度报表
+            </MenuItem>
+            <MenuItem name="1-3-4" @click.native="openMemberDelayReport">
+              <Icon type="md-chatbubbles" />
+              成员延期报表
+            </MenuItem>
+          </MenuGroup>
+<!--          <MenuItem name="1-3-1" @click.native="openProjectReport">项目报表</MenuItem>-->
+<!--          <MenuItem name="1-3-2" @click.native="openMemberReport">成员报表</MenuItem>-->
         </Submenu>
       </Menu>
     </Sider>
@@ -42,10 +62,8 @@
 </template>
 
 <script>
-// import allProjects from "@/components/allProjects";
 export default {
   name: "project",
-  // components:{allProjects},
   data() {
     return {
       isCollapsed: false,
@@ -83,10 +101,16 @@ export default {
       this.$router.push('/myWorkCreate');
     },
     openProjectReport() {
-      this.$router.push('projectReport')
+      this.$router.push('/projectReport')
+    },
+    openProjectDelayReport() {
+      this.$router.push('/projectDelayReport')
     },
     openMemberReport() {
-      this.$router.push('memberReport')
+      this.$router.push('/memberReport')
+    },
+    openMemberDelayReport() {
+      this.$router.push('/memberDelayReport')
     }
   }
 }
