@@ -136,11 +136,15 @@ export default {
       workState: [
         {
           value:  0,
-          label:'未完成',
+          label:'未开始',
         },
         {
           value: 1,
           label: '已完成'
+        },
+        {
+          value: 2,
+          label: '进行中'
         },
       ],
       users: [],
@@ -165,26 +169,6 @@ export default {
           value:  0,
           label: '最低'
         },
-      ],
-      plife: [
-        {
-          title: '附件名称',
-          key: 'name'
-        }
-      ],
-      plifes: [
-        {
-          name: '附件1',
-        },
-        {
-          name: '附件2',
-        },
-        {
-          name: '附件3',
-        },
-        {
-          name: '附件4',
-        }
       ],
       editorOption:{},
       modal:false,

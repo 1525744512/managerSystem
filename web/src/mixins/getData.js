@@ -8,14 +8,14 @@ exports.default = exports.getData = {
         getUsers(){
             let data = [];
             const that = this;
-            this.axios.get(this.api.baseUrl + "/user/getCompanyUser/"+parseInt(this.$cookies.get("userCompany"))).then((res) => {
+            this.axios.get(this.api.baseUrl + "/user/getCompanyUser/" + parseInt(this.$cookies.get("userCompany"))).then((res) => {
                 let code = res.data.code;
                 let msg = res.data.msg;
                 if (code === 200) {
                     for (let i = 0; i < res.data.data.length;i++){
                         data.push({
-                            value:JSON.parse(JSON.stringify(res.data.data[i].userID)),
-                            label:JSON.parse(JSON.stringify(res.data.data[i].userName)),
+                            value: JSON.parse(JSON.stringify(res.data.data[i].userID)),
+                            label: JSON.parse(JSON.stringify(res.data.data[i].userName)),
                         })
                     }
                 } else {

@@ -77,9 +77,8 @@ export default {
         this.$refs.projectAdd.init();
       });
     },
-    open() {
-      this.$router.push('/projectView')
-
+    open(data) {
+      this.$router.push({name:'projectView', params: { projectID: data.projectID }});
     },
     getPersonalProject(){
       let data = [];
@@ -89,6 +88,7 @@ export default {
         if (code === 200) {
           for (let i = 0; i < res.data.data.length;i++){
             data.push({
+              projectID: JSON.parse(JSON.stringify(res.data.data[i].projectID)),
               projectName: JSON.parse(JSON.stringify(res.data.data[i].projectName)),
               departmentID:  JSON.parse(JSON.stringify(res.data.data[i].departmentName)),
               projectLeader:  JSON.parse(JSON.stringify(res.data.data[i].projectLeader)),

@@ -82,7 +82,7 @@ export default {
                   label:JSON.parse(JSON.stringify(res.data.data[i].taskName)),
                   taskEndTime: JSON.parse(JSON.stringify(res.data.data[i].taskEndTime))
                  })
-               }else if (res.data.data[i].taskStatus===0){
+               }else if (res.data.data[i].taskStatus===0||res.data.data[i].taskStatus===2){
                  this.task.push({
                    value:JSON.parse(JSON.stringify(res.data.data[i].taskID)),
                    label:JSON.parse(JSON.stringify(res.data.data[i].taskName)),
