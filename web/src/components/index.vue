@@ -71,7 +71,7 @@ export default {
     },
     getTask(){
       const that = this;
-      this.axios.get(this.api.baseUrl + "/task/getPersonalTask/"+ this.$cookies.get("userID") + "/" + this.$cookies.get("userCompany")).then((res) => {
+      this.axios.get(this.api.baseUrl + "/task/getMyTaskResponsible/"+ this.$cookies.get("userID") + "/" + this.$cookies.get("userCompany")).then((res) => {
         let code = res.data.code;
         let msg = res.data.msg;
         if (code === 200) {
