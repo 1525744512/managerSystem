@@ -96,11 +96,19 @@ export default {
               projectSchedule:  JSON.parse(JSON.stringify(res.data.data[i].projectSchedule))*100,
               projectCreatorTime:  JSON.parse(JSON.stringify(res.data.data[i].projectCreatorTime)),
             })
+            if (data[i].projectStatus===1){
+                data[i].projectStatus = "正常"
+            }else if (data[i].projectStatus===2){
+                data[i].projectStatus = "有风险"
+            }else {
+                data[i].projectStatus = "失控"
+            }
           }
         }else {
           this.$Message.error(msg);
         }
       });
+
       return data;
     },
     search(){

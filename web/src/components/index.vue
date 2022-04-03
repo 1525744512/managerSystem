@@ -60,7 +60,7 @@ export default {
     add () {
       this.flag = true;
       this.$nextTick(() => {
-        this.$refs.workAdd.init();
+        this.$refs.workAdd.init(null);
       });
     },
     open(value){

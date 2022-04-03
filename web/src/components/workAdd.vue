@@ -13,8 +13,11 @@
             </Col>
           </row>
           <row style="margin-bottom: 1.5%;margin-top: 0.5%;">
-            <Col span="12">
-              <Select v-model="formItem.projectID" clearable style="width: 95%">
+            <Col span="12" >
+              <Select v-if="!flag" v-model="formItem.projectID" clearable style="width: 95%">
+                <Option v-for="item in project" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+              <Select v-if="flag" disabled v-model="formItem.projectID" clearable style="width: 95%">
                 <Option v-for="item in project" :value="item.value" :key="item.value">{{ item.label }}</Option>
               </Select>
             </Col>
@@ -49,7 +52,7 @@
             <label>优先级</label>
           </row>
           <row>
-            <Select v-model="formItem.taskPriority" filterable style="width: 47.5%">
+            <Select v-model="formItem.taskPriority" clearable filterable style="width: 47.5%">
               <Option v-for="item in Priority" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
           </row>
@@ -78,6 +81,7 @@
 <script>
 import {validationMixin} from 'vuelidate'
 import {getData} from "@/mixins/getData";
+import Utils from "@/assets/util";
 
 export default {
   name: "workAdd",
@@ -129,6 +133,7 @@ export default {
       users: [],
       editorOption:{},
       modal:false,
+      flag:false,
     }
   },
   methods: {
@@ -141,8 +146,12 @@ export default {
     },
     onEditorChange(){//内容改变事件
     },
-    init(){
+    init(value){
         this.modal =true;
+        this.formItem.projectID = value;
+        if (value!==null){
+          this.flag = true;
+        }
     },
     ok () {
       const that = this;
@@ -156,6 +165,7 @@ export default {
           if (code === 200) {
             that.$Message.success(msg);
             this.modal = false;
+            Utils.$emit('work','msg');
           } else {
             // todo 登录失败处理
             that.$Message.error(msg);

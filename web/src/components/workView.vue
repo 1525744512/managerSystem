@@ -139,6 +139,7 @@ export default {
       formItem:{
         taskID:'',
         projectID:'',
+        userCompanyID:this.$cookies.get("userCompany"),
         taskName: '',
         taskStatus: '',
         taskLeader: '',

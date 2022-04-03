@@ -37,7 +37,7 @@
           <label @click="addProject"><Icon type="ios-folder" style="margin-right: 0.5vh"/>新建项目</label>
         </row>
         <project-add v-if="flag2" ref="projectAdd"></project-add>
-
+        <Divider />
         <row style="margin-top: 2vh">
           <label @click="add"><Icon type="md-folder" style="margin-right: 0.5vh"/>新建任务</label>
         </row>
@@ -93,7 +93,7 @@ export default {
     add() {
       this.flag = true;
       this.$nextTick(() => {
-        this.$refs.workAdd.init();
+        this.$refs.workAdd.init(null);
       });
     },
     addProject() {

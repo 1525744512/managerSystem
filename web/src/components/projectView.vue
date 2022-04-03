@@ -55,7 +55,7 @@
           >
             <a href="javascript:void(0)" @click="handleClick">
               <Icon type="ios-calendar-outline"></Icon>
-              <template v-if="formItem.projectEndTime === ''">任务开始时间</template>
+              <template v-if="formItem.projectEndTime === ''">任务结束时间</template>
               <template v-else>{{ formItem.projectEndTime }}</template>
             </a>
           </DatePicker>
@@ -91,10 +91,12 @@
         </row>
         <row>
           <Col>
-            <Table border :columns="users" height="270" :data="data3" v-model="data1" style="width: 98vh;margin-top: 1.5%">
-              <template slot-scope="{ row, index }" slot="action">
-                <Button type="error" size="small" @click="remove(index)">删除</Button>
+            <Table border v-if="show" :columns="users" height="270" :data="data3" v-model="data1" style="width: 98vh;margin-top: 1.5%">
+              <template slot-scope="{ row, index }" slot="action" >
+                <Button type="error" size="small"  @click="remove(index)">删除</Button>
               </template>
+            </Table>
+            <Table border v-if="!show" :columns="usersShow" height="270" :data="data3" v-model="data1" style="width: 98vh;margin-top: 1.5%">
             </Table>
           </Col>
         </row>
@@ -109,20 +111,18 @@
           <Button type="text" size="small" icon="ios-sync" @click="updata">更新</Button>
         </Col>
       </row>
-      <row>
-        <Form ref="formWork" :model="formWork" inline>
-          <row>
-            <Col>
-              <FormItem label="当前状态">
-                <label>{{ formWork.projectStatusLabel }}</label>
-              </FormItem>
-            </Col>
-          </row>
-          <row>
-            <FormItem label="附件">
-              <label>{{ formWork.enclosure }}</label>
-            </FormItem>
-          </row>
+      <row style="width: 100%;">
+        <Form ref="formWork" :model="formWork" style="width: 100%">
+          <FormItem label="当前状态:">
+            <label>{{ formWork.projectStatusLabel }}</label>
+          </FormItem>
+          <FormItem label="附件:" style="width: 100%">
+            <label style="width: 100%;margin-left: 7%">{{ formWork.projectFileName }}</label>
+            <div v-if="formWork.projectFileName !== '无附件'" style="width: 100%">
+              <Button type="primary" style="margin-left: 7%" @click="download" icon="ios-download-outline" shape="circle"/>
+              <Button type="error" style="margin-left: 3%" @click="removeTaskFile" icon="md-trash" shape="circle"/>
+            </div>
+          </FormItem>
         </Form>
       </row>
       <Divider/>
@@ -210,33 +210,35 @@
     </modal>
 
     <!--    任务管理-->
-    <modal v-model="modal2" title="全部任务" :styles="{top: '20px',width:'110vh'}">
+    <modal v-model="modal2" title="全部任务" :styles="{top: '20px',width:'55%'}">
       <row>
-        <Col span="10">
-          <Input suffix="ios-search" placeholder="搜索成员(按Enter搜索)" style="width: auto"/>
+        <Col span="20">
+          <Input suffix="ios-search" v-model="searchTaskInput" placeholder="搜索成员(按Enter搜索)" style="width: auto" @keyup.enter.native="searchTask" @input="searchTask"/>
         </Col>
-        <Col style="margin-left: 44.5vh">
+        <Col style="margin-left: 1.8%">
           <Button type="primary" icon="ios-add" @click="add">新建任务</Button>
           <work-add v-if="flag3" ref="workAdd"></work-add>
         </Col>
       </row>
       <row>
-        <Table border :columns="work" :data="data2" style="width: 100%;margin-top: 1.5%"></Table>
+        <Table border :columns="work" height="300" v-model="data2" :data="data4" style="width: 100%;margin-top: 1.5%" @on-row-click="openWork"></Table>
+        <work-view v-if="flag4" ref="workView"></work-view>
       </row>
-
     </modal>
   </div>
 </template>
 
 <script>
 import workAdd from "@/components/workAdd";
+import workView from "@/components/workView";
 import {validationMixin} from "vuelidate";
 import {getData} from "@/mixins/getData";
 import {parseDate} from "view-design/src/components/date-picker/util";
+import Utils from "@/assets/util";
 
 export default {
   name: "projectView",
-  components: {workAdd},
+  components: {workAdd,workView},
   mixins: [validationMixin,getData],
   data() {
     return {
@@ -246,11 +248,16 @@ export default {
         projectLeader: null,
         projectStartTime: '',
         projectEndTime: '',
-        projectDescribe: ''
+        projectDescribe: '',
+        projectCreator:'',
       },
       formWork: {
         projectStatusLabel: '正常',
-        enclosure: '无附件'
+        projectFileID:'',
+        projectID:'',
+        projectFileUrl:'',
+        projectFileName: '无附件',
+        projectFilePathName:'',
       },
       projectStatus:1,
       editorOption: {},
@@ -266,11 +273,18 @@ export default {
       flag1: true,
       flag2: false,
       flag3: false,
+      flag4:false,
       modal: false,
       modal2: false,
       open: false,
       open2: false,
       workUsers: [],
+      usersShow:[
+        {
+          title: '成员',
+          key: 'userName'
+        },
+      ],
       users: [
         {
           title: '成员',
@@ -280,7 +294,7 @@ export default {
           title: '操作',
           slot: 'action',
           width: 200,
-          align: 'center'
+          align: 'center',
         }
       ],
       data1: [],
@@ -300,46 +314,45 @@ export default {
       ],
       work: [
         {
+          type: 'index',
+          width: 60,
+          align: 'center'
+        },
+        {
           title: '状态',
-          key: 'state'
+          key: 'taskStatus'
         },
         {
           title: '标题',
-          key: 'titles'
+          key: 'taskName'
         },
         {
           title: '负责人',
-          key: 'user'
+          key: 'taskLeader'
         },
         {
           title: '优先级',
-          key: 'priority'
+          key: 'taskPriority'
         },
         {
           title: '开始时间',
-          key: 'startTime'
+          key: 'taskStartTime'
         },
         {
           title: '截止时间',
-          key: 'endTime'
+          key: 'taskEndTime'
         },
       ],
-      data2: [
-        {
-          state:'未开始',
-          titles:'任务1',
-          user:'磊儿子',
-          priority:'最高',
-          startTime:'2021-12-30',
-          endTime:'2022-12-30',
-        }
-      ],
-      data3:[],
+      data2: [],
+      data3: [],
+      data4:[],
       totalPerson:0,
       searchProjectPersonal:null,
       file: null,
       loadingStatus: false,
       uploadData:{'projectID':null},
+      show:false,
+      searchTaskInput:null,
     }
   },
   methods: {
@@ -352,7 +365,6 @@ export default {
         this.open = !this.open;
       } else {
         this.open2 = !this.open2;
-
       }
     },
     handleChangeStart(date) {
@@ -398,12 +410,65 @@ export default {
     onEditorChange() {//内容改变事件
     },
     taskManagement() {
-      this.modal2 = true
+      this.modal2 = true;
+      this.data2 = this.getProjectTask();
+      this.data4 = this.getProjectTask();
+    },
+    getProjectTask(){
+      let data = [];
+      this.axios.get(this.api.baseUrl + "/project/getProjectTask/"+ this.formItem.projectID).then((res) => {
+        let code = res.data.code;
+        if (code === 200) {
+          for (let i = 0; i < res.data.data.length;i++){
+            data.push({
+              taskName: JSON.parse(JSON.stringify(res.data.data[i].taskName)),
+              taskID: JSON.parse(JSON.stringify(res.data.data[i].taskID)),
+              taskStartTime: JSON.parse(JSON.stringify(res.data.data[i].taskStartTime)),
+              taskEndTime: JSON.parse(JSON.stringify(res.data.data[i].taskEndTime)),
+              taskLeader: JSON.parse(JSON.stringify(res.data.data[i].taskLeader)),
+              taskDescribe: JSON.parse(JSON.stringify(res.data.data[i].taskDescribe)),
+              taskStatus: JSON.parse(JSON.stringify(res.data.data[i].taskStatus)),
+              taskCreateTime: JSON.parse(JSON.stringify(res.data.data[i].taskCreateTime)),
+              taskCompleteTime: JSON.parse(JSON.stringify(res.data.data[i].taskCompleteTime)),
+              taskPriority: JSON.parse(JSON.stringify(res.data.data[i].taskPriority)),
+              taskCreator: JSON.parse(JSON.stringify(res.data.data[i].taskCreator)),
+            })
+            for (let j=0;j<this.workUsers.length;j++){
+              if (this.workUsers[j].value===parseInt(data[i].taskLeader)){
+                data[i].taskLeader = this.workUsers[j].label;
+              }
+            }
+            if (data[i].taskStatus===0){
+              data[i].taskStatus="未开始"
+            }else if (data[i].taskStatus===1){
+              data[i].taskStatus="已完成"
+            }else if (data[i].taskStatus===2) {
+              data[i].taskStatus="进行中"
+            }else {
+              data[i].taskStatus=null
+            }
+            if (data[i].taskPriority==="0"){
+              data[i].taskPriority="最低"
+            }else if (data[i].taskPriority==="1"){
+              data[i].taskPriority="较低"
+            }else if (data[i].taskPriority==="2"){
+              data[i].taskPriority="普通"
+            }else if (data[i].taskPriority==="3"){
+              data[i].taskPriority="较高"
+            }else if (data[i].taskPriority==="4"){
+              data[i].taskPriority="最高"
+            }else {
+              data[i].taskPriority=null
+            }
+          }
+        }
+      });
+      return data;
     },
     add() {
       this.flag3= true;
       this.$nextTick(() => {
-        this.$refs.workAdd.init();
+        this.$refs.workAdd.init(this.formItem.projectID);
       });
     },
     getProjectAll(){
@@ -412,6 +477,10 @@ export default {
         if (code === 200) {
           this.formItem.projectID = JSON.parse(JSON.stringify(res.data.data.projectID));
           this.formItem.projectName =   JSON.parse(JSON.stringify(res.data.data.projectName));
+          this.formItem.projectCreator =   JSON.parse(JSON.stringify(res.data.data.projectCreatorID));
+          if (this.formItem.projectCreator===parseInt(this.$cookies.get("userID"))||parseInt(this.$cookies.get("userID"))===JSON.parse(JSON.stringify(res.data.data.userOwner))){
+            this.show = true;
+          }
           if (res.data.data.projectLeader!==null){
             this.formItem.projectLeader =  parseInt(JSON.parse(JSON.stringify(res.data.data.projectLeader)));
           }
@@ -420,7 +489,6 @@ export default {
             this.formItem.projectStartTime =  parseDate(JSON.parse(JSON.stringify(res.data.data.projectStartTime)));
           }
           if (res.data.data.projectEndTime!==null){
-            window.alert(JSON.parse(JSON.stringify(res.data.data.projectEndTime)))
             this.formItem.projectEndTime = parseDate(JSON.parse(JSON.stringify(res.data.data.projectEndTime)),'yyyy-MM-dd');
           }
           this.formWorkDescribe.taskTotal = JSON.parse(JSON.stringify(res.data.data.taskTotal));
@@ -451,6 +519,13 @@ export default {
             })
           }
           this.totalPerson = res.data.data.projectUserVos.length;
+          if (res.data.data.projectfile!==null){
+            this.formWork.projectFileID = JSON.parse(JSON.stringify(res.data.data.projectfile.projectFileID));
+            this.formWork.projectID = JSON.parse(JSON.stringify(res.data.data.projectfile.projectID));
+            this.formWork.projectFileName=JSON.parse(JSON.stringify(res.data.data.projectfile.projectFileName));
+            this.formWork.projectFilePathName= JSON.parse(JSON.stringify(res.data.data.projectfile.projectFilePathName));
+            this.formWork.projectFileUrl=JSON.parse(JSON.stringify(res.data.data.projectfile.projectFileUrl));
+          }
         }
       })
     },
@@ -469,8 +544,7 @@ export default {
       }
     },
     remove (index) {
-      if (parseInt(this.$cookies.get("userID"))===this.formItem.projectLeader||this.formItem.projectLeader===null){
-        if (this.formItem.projectLeader!==this.data1[index].userID){
+        if (this.formItem.projectCreator!==this.data1[index].userID){
           this.axios.delete(this.api.baseUrl + '/project/deleteProjectUser' + '/' + this.data1[index].userID+'/' + this.formItem.projectID).then((res) => {
             let msg = res.data.msg;
             let code = res.data.code;
@@ -482,11 +556,8 @@ export default {
             }
           });
         }else {
-          this.$Message.error("您是项目负责人，不能自己");
+          this.$Message.error("拥有者是唯一的管理员，不能移除");
         }
-      }else {
-        this.$Message.error("您不是项目负责人，不能删除成员");
-      }
     },
     handleUpload (file) {
       this.file = file;
@@ -496,24 +567,34 @@ export default {
     upload () {
       this.loadingStatus = true;
       this.$set(this.$refs.upload.data, 'projectID', this.formItem.projectID);
+      this.formWork.projectFileName = this.file.name;
       this.$refs.upload.post(this.file);
       setTimeout(() => {
         this.file = null;
         this.loadingStatus = false;
         this.$Message.success('Success')
-        this.getTaskFile();
       }, 1500);
     },
-    download(index){
-      window.open(this.api.baseUrl+ "/task/download/" + this.uploadList[index].taskFilePathName, '_blank')
+    download(){
+      this.axios.get(this.api.baseUrl + "/project/getProjectFileName/"+ this.formItem.projectID).then((res) => {
+        let code = res.data.code;
+        if (code === 200) {
+          this.formWork.projectFileID = JSON.parse(JSON.stringify(res.data.data.projectFileID));
+          this.formWork.projectID = JSON.parse(JSON.stringify(res.data.data.projectID));
+          this.formWork.projectFileName=JSON.parse(JSON.stringify(res.data.data.projectFileName));
+          this.formWork.projectFilePathName= JSON.parse(JSON.stringify(res.data.data.projectFilePathName));
+          this.formWork.projectFileUrl=JSON.parse(JSON.stringify(res.data.data.projectFileUrl));
+          window.open(this.api.baseUrl+ "/project/download/" + this.formWork.projectFilePathName , '_blank')
+        }
+      });
     },
-    removeTaskFile(index){
-      this.axios.delete(this.api.baseUrl + '/task/deleteTaskFile' + '/' + this.uploadList[index].taskFileID).then((res) => {
+    removeTaskFile(){
+      this.axios.delete(this.api.baseUrl + '/project/deleteProjectFile' + '/' + this.formWork.projectFileID).then((res) => {
         let msg = res.data.msg;
         let code = res.data.code;
         if (code === 200) {
           this.$Message.success(msg);
-          this.uploadList.splice(index,1);
+          this.formWork.projectFileName = "无附件";
         }else {
           this.$Message.error(msg);
         }
@@ -527,7 +608,6 @@ export default {
           let code = res.data.code;
           let msg = res.data.msg;
           if (code === 200) {
-            that.$Message.success(msg);
             this.modal = false;
             if (this.projectStatus===1){
               this.formWork.projectStatusLabel = "正常";
@@ -549,6 +629,26 @@ export default {
     cancel () {
       this.modal = false;
     },
+    openWork(data){
+      this.flag4 = true;
+      this.$nextTick(() => {
+        this.$refs.workView.init(data.taskID);
+      });
+    },
+    searchTask(){
+      let _search = this.searchTaskInput.toString().toLowerCase();
+      let newListData = []; //  用于存放搜索出来数据的新数组
+      if (_search!==null) {
+        this.data2.filter(item => {
+          if (item.taskName.toLowerCase().indexOf(_search) !== -1) {
+            newListData.push(item);
+          }
+        })
+        this.data4 = newListData;
+      }else {
+        this.data4 = this.data2;
+      }
+    },
   },
   watch: {
     formItemData: {
@@ -567,9 +667,14 @@ export default {
   },
   created() {
     this.workUsers = this.getUsers();
+    this.getProjectAll();
   },
   mounted() {
-    this.getProjectAll();
+    const that = this;
+    Utils.$on('work', function() {
+      that.data4 = that.getProjectTask();
+      that.getProjectAll();
+    });
   }
 }
 </script>
