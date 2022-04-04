@@ -104,9 +104,15 @@ export default {
            //todo 接口访问异常处理
          that.$Message.error("新建任务接口访问失败!");
        });
-     }
+     },
+    getCookies(){
+      if (this.$cookies.get("userID")===null){
+        this.$router.push("/Login")
+      }
+    }
   },
   created() {
+    this.getCookies();
     this.getTask();
   }
 }

@@ -1,11 +1,7 @@
 <template>
-  <Layout style="background-color: #ffffff;width: 50%;height: 100vh">
-    <Sider ref="side1" hide-trigger collapsible :collapsed-width="78" v-model="isCollapsed">
+  <Layout style="background-color: #ffffff;width: 1%;height: 100vh">
+    <Sider ref="side1" hide-trigger collapsible :collapsed-width="80" v-model="isCollapsed">
       <Menu active-name="1-3" width="auto" :class="menuitemClasses">
-        <!--        <MenuItem name="1-1" @click.native="openMyWork">-->
-        <!--          <Icon type="ios-navigate" ></Icon>-->
-        <!--          <span>我的任务</span>-->
-        <!--        </MenuItem>-->
         <MenuItem name="1-2" @click.native="open">
           <Icon type="ios-search"></Icon>
           <span>全部项目</span>
@@ -44,17 +40,15 @@
               成员延期报表
             </MenuItem>
           </MenuGroup>
-<!--          <MenuItem name="1-3-1" @click.native="openProjectReport">项目报表</MenuItem>-->
-<!--          <MenuItem name="1-3-2" @click.native="openMemberReport">成员报表</MenuItem>-->
         </Submenu>
       </Menu>
     </Sider>
-    <Layout style="height: 100vh">
-      <Header :style="{padding: 0}" class="layout-header-bar">
+    <Layout style="height: 100vh;width: 100vh;">
+      <Header :style="{padding: 0,width:'100%'}" class="layout-header-bar">
         <Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin: '0 20px'}" type="md-menu"
               size="24"></Icon>
       </Header>
-      <Content :style="{height:'92vh'}">
+      <Content :style="{height:'92vh',width:'100%'}">
         <router-view></router-view>
       </Content>
     </Layout>
@@ -111,7 +105,15 @@ export default {
     },
     openMemberDelayReport() {
       this.$router.push('/memberDelayReport')
+    },
+    getCookies(){
+      if (this.$cookies.get("userID")===null){
+        this.$router.push("/Login")
+      }
     }
+  },
+  created() {
+    this.getCookies();
   }
 }
 </script>

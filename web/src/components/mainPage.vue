@@ -120,13 +120,28 @@ export default {
       }
     },
     exit() {
-      this.$router.push('/login');
+      this.$cookies.set("userID",null);
+      this.$cookies.set("userCompany",null);
+      this.$cookies.set("userOwner", null);
+      this.$router.push('/Login');
     },
     openBackstage() {
       this.$router.push('backstage');
+    },
+    getCookies(){
+      if (this.$cookies.get("userID")===null){
+        this.$cookies.set("userID",null);
+        this.$cookies.set("userCompany",null);
+        this.$cookies.set("userOwner", null);
+        this.$router.push("/Login")
+      }
     }
   },
+  mounted() {
+    this.getCookies();
+  },
   created() {
+    this.getCookies();
     this.isOwner();
   }
 }

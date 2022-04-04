@@ -649,6 +649,11 @@ export default {
         this.data4 = this.data2;
       }
     },
+    getCookies(){
+      if (this.$cookies.get("userID")===null){
+        this.$router.push("/Login")
+      }
+    }
   },
   watch: {
     formItemData: {
@@ -666,6 +671,7 @@ export default {
     }
   },
   created() {
+    this.getCookies();
     this.workUsers = this.getUsers();
     this.getProjectAll();
   },

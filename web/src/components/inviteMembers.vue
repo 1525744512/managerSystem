@@ -69,8 +69,16 @@ export default {
       this.modal7 = false;
       this.userName = null;
       this.userPassword = null;
+    },
+    getCookies(){
+      if (this.$cookies.get("userID")===null){
+        this.$router.push("/Login")
+      }
     }
   },
+  created() {
+    this.getCookies();
+  }
 }
 </script>
 

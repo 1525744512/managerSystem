@@ -146,8 +146,14 @@ export default {
       this.formItem.projectDescribe=null;
       this.formItem.usersChoose=null;
     },
+    getCookies(){
+      if (this.$cookies.get("userID")===null){
+        this.$router.push("/Login")
+      }
+    }
   },
   created() {
+    this.getCookies()
     this.grouping = this.getDepartment();
     this.users = this.getUsers();
   }

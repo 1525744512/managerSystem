@@ -181,8 +181,14 @@ export default {
     cancel () {
       this.modal = false;
     },
+    getCookies(){
+      if (this.$cookies.get("userID")===null){
+        this.$router.push("/Login")
+      }
+    }
   },
   created() {
+    this.getCookies();
     this.project = this.getProject();
     this.users = this.getUsers();
   }

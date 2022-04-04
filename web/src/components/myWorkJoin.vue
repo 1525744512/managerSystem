@@ -1,8 +1,8 @@
 <template>
-  <Card :bordered="false" style="height: 86vh;margin: 20px">
+  <Card :bordered="false" style="height: 86vh;margin: 20px;width: 97%">
     <p slot="title">我参与的</p>
     <Input search placeholder="搜索项目(按Enter搜索)" style="width: 50vh" v-model="searchTask" @keyup.enter.native="search" @input="search"/>
-    <Table size="small" height="470" border  stripe :columns="columns1" :data="data1" v-model="data2" style="margin-top: 2%;width: 158vh" @on-row-click="open"></Table>
+    <Table size="small" height="470" border  stripe :columns="columns1" :data="data1" v-model="data2" style="margin-top: 2%;width: 100%" @on-row-click="open"></Table>
     <work-view v-if="flag" ref="workView"></work-view>
   </Card>
 </template>
@@ -99,7 +99,7 @@ export default {
     },
     getMyTaskJoin(){
       let data = []
-      this.axios.get(this.api.baseUrl + "/task/getMyTaskResponsible/"+ this.$cookies.get("userID")).then((res) => {
+      this.axios.get(this.api.baseUrl + "/task/getMyTaskJoin/"+ this.$cookies.get("userID") +"/"+this.$cookies.get("userCompany")).then((res) => {
         let code = res.data.code;
         if (code === 200) {
           for (let i = 0; i < res.data.data.length;i++){
@@ -140,9 +140,15 @@ export default {
         }
       });
       return data;
+    },
+    getCookies(){
+      if (this.$cookies.get("userID")===null){
+        this.$router.push("/Login")
+      }
     }
   },
   created() {
+    this.getCookies();
     this.workUsers = this.getUsers();
     this.project = this.getProject();
     this.data2 = this.getMyTaskJoin();

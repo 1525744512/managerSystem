@@ -308,8 +308,14 @@ export default {
         }
       });
     },
+    getCookies(){
+      if (this.$cookies.get("userID")===null){
+        this.$router.push("/Login")
+      }
+    }
   },
   created() {
+    this.getCookies();
     this.users = this.getUsers();
   },
 }
