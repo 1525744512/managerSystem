@@ -15,8 +15,8 @@
             <Icon type="md-add"></Icon>
             <span>新建</span>
           </MenuItem>
-          <MenuItem name="1-4">
-            <Icon type="ios-search"></Icon>
+          <MenuItem name="1-4" @click.native="searchModel">
+            <Icon type="ios-search" ></Icon>
             <span>搜索</span>
           </MenuItem>
           <MenuItem name="1-5" v-show="isOwnerFlag" @click.native="openInviteMembers">
@@ -52,7 +52,7 @@
         <account-settings v-if="flag4" ref="accountSettings"></account-settings>
         <Divider style="width: 100%"/>
 
-        <row>
+        <row v-if="isOwnerFlag">
           <label @click="openBackstage"> <Icon type="ios-home" style="margin-right: 0.5vh"/>进入企业后台</label>
         </row>
 
@@ -61,6 +61,8 @@
         </row>
       </Drawer>
       <inviteMembers title="测试窗口" v-if="openDialog" ref="inviteMembers"/>
+      <searchModel  v-if="searchFlag" ref="searchModel"></searchModel>
+
     </Row>
   </div>
 </template>
@@ -70,11 +72,12 @@ import workAdd from "@/components/workAdd"
 import projectAdd from "@/components/projectAdd";
 import inviteMembers from "@/components/inviteMembers";
 import accountSettings from "@/components/accountSettings";
+import searchModel from "@/components/searchModel";
 
 
 export default {
   name: "mainPage",
-  components: {workAdd, projectAdd, inviteMembers,accountSettings},
+  components: {workAdd, projectAdd, inviteMembers,accountSettings,searchModel},
   data() {
     return {
       value1: false,
@@ -84,6 +87,7 @@ export default {
       flag4: false,
       openDialog: false,
       isOwnerFlag: false,
+      searchFlag: false,
     }
   },
   methods: {
@@ -94,6 +98,12 @@ export default {
       this.flag = true;
       this.$nextTick(() => {
         this.$refs.workAdd.init(null);
+      });
+    },
+    searchModel(){
+      this.searchFlag = true;
+      this.$nextTick(() => {
+        this.$refs.searchModel.init();
       });
     },
     addProject() {
@@ -115,7 +125,7 @@ export default {
       });
     },
     isOwner() {
-      if (this.$cookies.get("userOwner") === "1") {
+      if (this.$cookies.get("userOwner") === "1"||this.$cookies.get("userRole")===1) {
         this.isOwnerFlag = true;
       }
     },

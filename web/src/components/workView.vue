@@ -378,7 +378,6 @@ export default {
               this.flag1 = true;
             }
           }
-
           this.formItem.taskStartTime =  JSON.parse(JSON.stringify(res.data.data.taskStartTime));
           this.formItem.taskEndTime =  JSON.parse(JSON.stringify(res.data.data.taskEndTime));
           this.formItem.taskPriority = JSON.parse(JSON.stringify(res.data.data.taskPriority));

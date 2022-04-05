@@ -1,9 +1,9 @@
 <template>
   <Layout>
     <Sider>
-      <Menu active-name="1" style="width: 27.7vh;height: 100vh">
-        <img class="img" src="../assets/back.png">
-        <MenuGroup :title="name" >
+      <Menu active-name="1" width="auto" style="height: 100vh">
+        <img class="img" src="../assets/back.png" alt="">
+        <MenuGroup >
           <MenuItem name="1" @click.native="openUserManage">
             <Icon type="md-document" />
             成员管理
@@ -15,7 +15,7 @@
         </MenuGroup>
       </Menu>
     </Sider>
-    <Content>
+    <Content style="height: 100vh">
       <router-view></router-view>
     </Content>
   </Layout>

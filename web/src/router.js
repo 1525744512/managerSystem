@@ -12,8 +12,6 @@ VueRouter.prototype.push = function push(location) {
 Vue.use(VueRouter);
 
 import Login from "@/components/Login";
-import userInformation from "@/components/userInformation";
-import backIndex from "@/components/backIndex";
 import mainPage from "@/components/mainPage";
 import index from "@/components/index";
 import project from "@/components/project";
@@ -42,16 +40,6 @@ const routes = [
         path: '',
         name: 'index',
         redirect: {path: '/Login'}
-    },
-    {
-        path: '/userInformation',
-        name: 'userInformation',
-        component: userInformation
-    },
-    {
-        path: '/backIndex',
-        name: 'backIndex',
-        component: backIndex
     },
     {
         path: '/workAdd',

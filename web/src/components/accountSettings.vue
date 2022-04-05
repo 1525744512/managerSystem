@@ -1,7 +1,7 @@
 <template>
   <modal v-model="modal"
-         title="账户设置" @on-ok="ok" @on-cancel="cancel">
-    <Form :model="formAccount" :rules="ruleInline">
+         title="账户设置" @on-ok="ok()" @on-cancel="cancel">
+    <Form ref="formAccount"  :model="formAccount" >
       <row align="middle">
         <label style="font-size: 24px">修改用户名</label>
         <label style="color: #0066cc;margin-left: 44vh" @click="openUser" v-if="flag1">展开
@@ -30,7 +30,7 @@
       </row>
       <label style="color: #777777">修改密码时需要输入当前密码。</label>
       <FormItem prop="oldPassword" v-if="flag4">
-        <Input type="password" v-model="oldPassword" placeholder="请输入你的旧密码">
+        <Input type="password" v-model="formAccount.oldPassword" placeholder="请输入你的旧密码">
           <Icon type="ios-lock-outline" slot="prepend"></Icon>
         </Input>
       </FormItem>
@@ -55,6 +55,10 @@
         <Input v-model="formAccount.mail" placeholder="请输入你的邮箱"></Input>
       </FormItem>
     </Form>
+    <div slot="footer">
+      <Button type="text" @click="cancel">取消</Button>
+      <Button type="primary" @click="ok()">确定</Button>
+    </div>
   </modal>
 </template>
 
@@ -70,40 +74,102 @@ export default {
       flag4: false,
       flag5: true,
       flag6: false,
-      oldPassword:'',
-      newPassword:'',
+      oldPassword: '',
+      newPassword: '',
       formAccount: {
-        user: '0',
-        oldPassword: '0',
-        newPassword: '',
-        mail: '0'
+        userID:'',
+        user: '',
+        oldPassword: null,
+        newPassword: null,
+        mail: ''
       },
-      ruleInline: {
-        user: [
-          {required: true, message: '请输入正确的账户', trigger: 'blur'}
-        ],
-        oldPassword: [
-          {required: true, message: '请输入旧密码', trigger: 'blur'},
-          {type: 'string', min: 6, message: '请输入正确的旧密码', trigger: 'blur'}
-        ],
-        newPassword: [
-          {required: true, message: '请输入新密码.', trigger: 'blur'},
-          {type: 'string', min: 6, message: '请输入正确的新密码', trigger: 'blur'}
-        ],
-        mail: [
-          {required: true, message: '邮箱不能为空', trigger: 'blur'},
-          {type: 'email', message: '请输入正确的邮箱格式', trigger: 'blur'}
-        ],
-      }
     }
   },
   methods: {
     ok() {
+      if (this.formAccount.oldPassword!==null){
+        window.alert( this.formAccount.oldPassword)
+        if (this.oldPassword === this.formAccount.oldPassword) {
+          if (this.formAccount.mail!==null){
+            var format1 = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+            if (!this.formAccount.mail.match(format1)) {
+              this.$Message.error("请输入正确邮箱格式");
+            }else {
+              this.axios.post(this.api.baseUrl + "/user/updateMyUser/", this.formAccount).then((res) => {
+                let code = res.data.code;
+                if (code === 200) {
+                  this.modal = false;
+                  this.oldPassword = null;
+                  this.formAccount.oldPassword = null;
+                  this.formAccount.newPassword = null;
+                  this.formAccount.user = null;
+                  this.formAccount.mail = null;
+                }
+              });
+            }
+          }else {
+            this.axios.post(this.api.baseUrl + "/user/updateMyUser/", this.formAccount).then((res) => {
+              let code = res.data.code;
+              if (code === 200) {
+                this.modal = false;
+                this.oldPassword = null;
+                this.formAccount.oldPassword = null;
+                this.formAccount.newPassword = null;
+                this.formAccount.user = null;
+                this.formAccount.mail = null;
+              }
+            });
+          }
+        } else {
+          this.$Message.error("请输入正确旧密码");
+        }
+      }else {
+        if (this.formAccount.mail!==null){
+          var format = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+          if (!this.formAccount.mail.match(format)) {
+            this.$Message.error("请输入正确邮箱格式");
+          }else {
+            this.axios.post(this.api.baseUrl + "/user/updateMyUser/", this.formAccount).then((res) => {
+              let code = res.data.code;
+              if (code === 200) {
+                this.modal = false;
+                this.oldPassword = null;
+                this.formAccount.oldPassword = null;
+                this.formAccount.newPassword = null;
+                this.formAccount.user = null;
+                this.formAccount.mail = null;
+              }
+            });
+          }
+        }else {
+          this.axios.post(this.api.baseUrl + "/user/updateMyUser/", this.formAccount).then((res) => {
+            let code = res.data.code;
+            if (code === 200) {
+              this.modal = false;
+              this.oldPassword = null;
+              this.formAccount.oldPassword = null;
+              this.formAccount.newPassword = null;
+              this.formAccount.user = null;
+              this.formAccount.mail = null;
+            }
+          });
+        }
+      }
     },
     cancel() {
+      this.modal = false;
     },
     init() {
       this.modal = true;
+      this.axios.get(this.api.baseUrl + "/user/getMyUser/"+ this.$cookies.get("userID")).then((res) => {
+        let code = res.data.code;
+        if (code === 200) {
+          this.formAccount.userID = res.data.data.userID;
+          this.formAccount.user = res.data.data.userName;
+          this.formAccount.mail = res.data.data.userEmail;
+          this.oldPassword = res.data.data.userPassWord;
+        }
+      });
     },
     openUser() {
       this.flag1 = false;

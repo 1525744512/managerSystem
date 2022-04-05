@@ -6,147 +6,54 @@
     </p>
     <Layout>
       <Sider hide-trigger :style="{background: '#fff'}" style="height: 88vh">
-        <Button type="text" icon="md-add" @click="addRole" size="2" style="color: #0066cc">新增角色</Button>
+        <Button type="text" icon="md-add" @click="addRole" size="small" style="color: #0066cc">新增角色</Button>
         <add-role v-if="flag2" ref="addRole"></add-role>
 
-        <Tree :data="data1" expand-node @on-contextmenu="handleContextMenu"></Tree>
+        <Tree :data="data1" @on-select-change="ContextMenu"></Tree>
       </Sider>
       <Content style="margin-left: 1.5vh;">
-        <Button type="primary" icon="md-add" @click="addUser" size="4"
-                style="float: right;margin-top: 2vh;margin-right: 1.5vh">添加成员
-        </Button>
-        <invite-members v-if="flag" ref="inviteMembers"></invite-members>
-        <Table stripe :columns="columns1" :data="data2" style="margin-top: 10vh;width: 150vh;"></Table>
+        <Table stripe :columns="columns1" :data="data2" style="margin-top: 10vh;width: 150vh;">
+          <template slot-scope="{ row }" slot="taskFileName">
+            <strong>{{ row.userName }}</strong>
+          </template>
+          <template slot-scope="{ row, index }" slot="action">
+            <Button type="primary" @click="update(index)" size="small">调整角色</Button>
+            <update-role v-if="flag4" ref="updateRole"></update-role>
+          </template>
+        </Table>
+        <div style="margin: 10px;overflow: hidden">
+          <div style="float: right;">
+            <Page :total="pageTotal" :current="pageNum" :page-size="pageSize" @on-change="changePage" show-total></Page>
+          </div>
+        </div>
       </Content>
     </Layout>
-
-    <!--    <Table stripe :columns="columns1" :data="data2" v-model="data1" style="margin-top: 2%;width: 100%" @on-row-click="open"></Table>-->
   </Card>
 </template>
 
 <script>
-import inviteMembers from "@/components/inviteMembers";
 import addRole from "@/components/addRole";
+import Utils from "@/assets/util";
+import UpdateRole from "@/components/updateRole";
 export default {
   name: "roleManage",
-  components: {inviteMembers,addRole},
+  components: {UpdateRole, addRole},
   data() {
     return {
-      // companyName:'吉磊控股有限公司',
       data1: [
         {
           title: '默认',
+          userRoleId:0,
+          loading: false,
           expand: true,
-          children: [
-            {
-              title: '所有者',
-              expand: true,
-            },
-            {
-              title: '管理员',
-              expand: true,
-            },
-            {
-              title: '部门主管',
-              expand: true,
-            },
-            {
-              title: '成员',
-              expand: true,
-            }
-          ]
-        },
-        {
-          title: '职务',
           contextmenu: true,
-          expand: true,
-          children: [
-            {
-              title: '财务',
-              expand: true,
-            },
-            {
-              title: '出纳',
-              expand: true,
-            },
-            {
-              title: '采购',
-              expand: true,
-            },
-            {
-              title: '客服',
-              expand: true,
-            },
-            {
-              title: '人事',
-              expand: true,
-            },
-            {
-              title: '行政',
-              expand: true,
-            },
-            {
-              title: 'HR',
-              expand: true,
-            }
-          ]
+          children: []
         },
-        {
-          title: '总监',
-          expand: true,
-          children: [
-            {
-              title: '研发总监',
-              expand: true,
-            },
-            {
-              title: '市场总监',
-              expand: true,
-            },
-            {
-              title: '销售总监',
-              expand: true,
-            },
-            {
-              title: '客服',
-              expand: true,
-            },
-            {
-              title: '人力资源总监',
-              expand: true,
-            }
-          ]
-        },
-        {
-          title: '区域',
-          expand: true,
-          children: [
-            {
-              title: '东区',
-              expand: true,
-            },
-            {
-              title: '西区',
-              expand: true,
-            },
-            {
-              title: '南区',
-              expand: true,
-            },
-            {
-              title: '北区',
-              expand: true,
-            },
-            {
-              title: '华中区',
-              expand: true,
-            }
-          ]
-        }
       ],
       searchProject: null,
       flag: false,
       flag2: false,
+      flag4:false,
       columns1: [
         {
           type: 'index',
@@ -160,47 +67,98 @@ export default {
           align: 'center'
         },
         {
-          title: '手机号',
-          key: 'tel',
+          title: '邮箱',
+          key: 'userEmail',
           align: 'center'
         },
         {
           title: '操作',
-          key: 'operation',
-          align: 'center',
-          render: (h) => {
-            return h('div', [
-              h('Button', {
-                props: {
-                  type: 'text',
-                  size: 'small'
-                }
-              }, '删除')
-            ]);
-          }
+          slot: 'action',
+          width: 200,
+          align: 'center'
         },
       ],
+      pageSize:5,
+      pageNum:1,
+      pageTotal:0,
       data2: [
         {
           userName: '吉磊',
           tel: '123112312',
         }
-      ]
+      ],
+      userRoleId:0,
     }
   },
   methods: {
-    addUser() {
-      this.flag = true;
-      this.$nextTick(() => {
-        this.$refs.inviteMembers.init(this.$cookies.get("userCompany"));
-      });
-    },
     addRole() {
       this.flag2 = true;
       this.$nextTick(() => {
         this.$refs.addRole.init();
       });
-    }
+    },
+    getMyChildren () {
+        this.axios.get(this.api.baseUrl + "/role/getMyChildrenRole/" + this.$cookies.get("userCompany")).then((res) => {
+          let code = res.data.code;
+          if (code === 200) {
+            for (let i=0;i<res.data.data.length;i++){
+              this.data1[0].children.push(
+                  {
+                    title: JSON.parse(JSON.stringify(res.data.data[i].userRoleName)),
+                    userRoleId:   JSON.parse(JSON.stringify(res.data.data[i].userRoleId)),
+                    loading: false,
+                    expand: true,
+                    contextmenu: true,
+                  },
+              )
+            }
+          }
+        });
+    },
+    ContextMenu(data){
+      this.userRoleId = data[0].userRoleId;
+      this.data2 = this.getMyUser(this.pageNum);
+    },
+    getMyUser(pageNum){
+      let data = [];
+      this.axios.get(this.api.baseUrl + '/user/getMyUserRole/' + this.userRoleId + '/' + this.$cookies.get("userCompany") + '/' + pageNum + '/' + this.pageSize).then((res) => {
+        let msg = res.data.msg;
+        let code = res.data.code;
+        this.pageTotal = res.data.total;
+        if (code === 200) {
+          for (let i = 0; i < res.data.data.records.length;i++){
+            data.push({
+              userID: JSON.parse(JSON.stringify(res.data.data.records[i].userID)),
+              userName: JSON.parse(JSON.stringify(res.data.data.records[i].userName)),
+              userEmail:  JSON.parse(JSON.stringify(res.data.data.records[i].userEmail)),
+            })
+          }
+        }else {
+          this.$Message.error(msg);
+        }
+      });
+      return data;
+    },
+    update(index){
+      this.flag4 = true;
+      this.$nextTick(() => {
+        this.$refs.updateRole.init(this.data2[index].userID);
+      });
+    },
+    changePage (value) {
+      this.data2 = this.getMyUser(value);
+    },
+  },
+  created() {
+    this.getMyChildren();
+    this.data2 = this.getMyUser(this.pageNum);
+  },
+  mounted() {
+    const that = this;
+    Utils.$on('addRole', function() {
+      that.data1[0].children = [];
+      that.getMyChildren();
+    });
   }
 }
 </script>

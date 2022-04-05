@@ -434,7 +434,7 @@ export default {
               taskCreator: JSON.parse(JSON.stringify(res.data.data[i].taskCreator)),
             })
             for (let j=0;j<this.workUsers.length;j++){
-              if (this.workUsers[j].value===parseInt(data[i].taskLeader)){
+              if (this.workUsers[j].value===parseInt(data[i].taskLeader)) {
                 data[i].taskLeader = this.workUsers[j].label;
               }
             }
