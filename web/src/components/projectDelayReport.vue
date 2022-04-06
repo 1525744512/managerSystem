@@ -176,7 +176,7 @@ export default {
             }
           }
           this.formItem.projectSum = res.data.data.length;
-          this.formItem.projectDelayRate = ((this.formItem.delayWorkSum+this.formItem.delayFinishWorkSum)/this.formItem.pendingWork)*100;
+          this.formItem.projectDelayRate = ((this.formItem.delayWorkSum)/this.formItem.pendingWork)*100;
         }
       });
       return data;

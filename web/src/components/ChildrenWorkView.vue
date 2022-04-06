@@ -77,7 +77,7 @@
                       ref="upload"
                       :before-upload="handleUpload"
                       :data="uploadData"
-                      action="//localhost:8550/task/upload"
+                      action="//81.69.201.78:8550/task/upload"
                   >
                     <Button icon="ios-cloud-upload-outline" size="small">选择文件上传</Button>
                   </Upload>

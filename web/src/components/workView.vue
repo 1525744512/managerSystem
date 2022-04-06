@@ -93,7 +93,7 @@
                       ref="upload"
                       :before-upload="handleUpload"
                       :data="uploadData"
-                      action="//localhost:8550/task/upload"
+                      action="//81.69.201.78:8550/task/upload"
                       >
                     <Button icon="ios-cloud-upload-outline" size="small">选择文件上传</Button>
                   </Upload>
@@ -209,7 +209,7 @@
                     ref="upload"
                     :before-upload="handleUpload"
                     :data="uploadData"
-                    action="//localhost:8550/task/upload"
+                    action="//81.69.201.78:8550/task/upload"
                 >
                   <Button icon="ios-cloud-upload-outline" size="small">选择文件上传</Button>
                 </Upload>
@@ -371,7 +371,11 @@ export default {
           this.formItem.taskID =   JSON.parse(JSON.stringify(res.data.data.taskID));
           this.formItem.projectID = JSON.parse(JSON.stringify(res.data.data.projectID));
           this.formItem.taskName =   JSON.parse(JSON.stringify(res.data.data.taskName));
-          this.formItem.taskStatus =   JSON.parse(JSON.stringify(res.data.data.taskStatus));
+          if (res.data.data.taskStatus===null){
+            this.formItem.taskStatus = 0;
+          }else {
+            this.formItem.taskStatus =   JSON.parse(JSON.stringify(res.data.data.taskStatus));
+          }
           this.formItem.taskLeader =   JSON.parse(JSON.stringify(res.data.data.taskLeader));
           if (this.formItem.taskLeader!==0){
             if (this.$cookies.get("userID")!== this.formItem.taskLeader.toString()&&this.$cookies.get("userOwner")!==this.$cookies.get("userID")){
@@ -412,6 +416,9 @@ export default {
               taskPriority: JSON.parse(JSON.stringify(res.data.data[i].taskPriority)),
               userID: JSON.parse(JSON.stringify(res.data.data[i].userIDList)),
             })
+            if (res.data.data[i].taskStatus===null){
+              this.ChildrenTaskData.taskStatus = 0;
+            }
           }
           this.childrenTaskTotal =  res.data.data.length;
         }
@@ -559,6 +566,9 @@ export default {
               taskPriority: JSON.parse(JSON.stringify(res.data.data[i].taskPriority)),
               userID: JSON.parse(JSON.stringify(res.data.data[i].userIDList)),
             })
+            if (res.data.data[i].taskStatus===null){
+              this.ChildrenTaskData.taskStatus = 0;
+            }
           }
           this.childrenTaskTotal =  res.data.data.length;
         }

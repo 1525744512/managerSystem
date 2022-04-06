@@ -103,39 +103,45 @@ export default {
         let code = res.data.code;
         if (code === 200) {
           for (let i = 0; i < res.data.data.length;i++){
-            data.push({
-              taskName: JSON.parse(JSON.stringify(res.data.data[i].taskName)),
-              taskID: JSON.parse(JSON.stringify(res.data.data[i].taskID)),
-              taskStartTime: JSON.parse(JSON.stringify(res.data.data[i].taskStartTime)),
-              taskEndTime: JSON.parse(JSON.stringify(res.data.data[i].taskEndTime)),
-              taskLeader: JSON.parse(JSON.stringify(res.data.data[i].taskLeader)),
-              projectID: JSON.parse(JSON.stringify(res.data.data[i].projectID)),
-              taskStatus: JSON.parse(JSON.stringify(res.data.data[i].taskStatus)),
-              taskCreateTime: JSON.parse(JSON.stringify(res.data.data[i].taskCreateTime)),
-              taskCompleteTime: JSON.parse(JSON.stringify(res.data.data[i].taskCompleteTime)),
-              taskPriority: JSON.parse(JSON.stringify(res.data.data[i].taskPriority)),
-              taskCreator: JSON.parse(JSON.stringify(res.data.data[i].taskCreator)),
-            })
+            if (JSON.parse(JSON.stringify(res.data.data[i].taskStatus))!==1){
+              data.push({
+                taskName: JSON.parse(JSON.stringify(res.data.data[i].taskName)),
+                taskID: JSON.parse(JSON.stringify(res.data.data[i].taskID)),
+                taskStartTime: JSON.parse(JSON.stringify(res.data.data[i].taskStartTime)),
+                taskEndTime: JSON.parse(JSON.stringify(res.data.data[i].taskEndTime)),
+                taskLeader: JSON.parse(JSON.stringify(res.data.data[i].taskLeader)),
+                projectID: JSON.parse(JSON.stringify(res.data.data[i].projectID)),
+                taskStatus: JSON.parse(JSON.stringify(res.data.data[i].taskStatus)),
+                taskCreateTime: JSON.parse(JSON.stringify(res.data.data[i].taskCreateTime)),
+                taskCompleteTime: JSON.parse(JSON.stringify(res.data.data[i].taskCompleteTime)),
+                taskPriority: JSON.parse(JSON.stringify(res.data.data[i].taskPriority)),
+                taskCreator: JSON.parse(JSON.stringify(res.data.data[i].taskCreator)),
+              })
+            }
+          }
+          for (let m=0;m<data.length;m++){
             for (let j=0;j<this.workUsers.length;j++){
-              if (this.workUsers[j].value===parseInt(data[i].taskLeader)){
-                data[i].taskLeader = this.workUsers[j].label;
+              if (this.workUsers[j].value===parseInt(data[m].taskLeader)){
+                data[m].taskLeader = this.workUsers[j].label;
+              }
+              if (this.workUsers[j].value===parseInt(data[m].taskCreator)){
+                data[m].taskCreator = this.workUsers[j].label;
               }
             }
             for (let j=0;j<this.project.length;j++){
-              if (this.project[j].value===parseInt(data[i].projectID)){
-                data[i].projectID = this.project[j].label;
+              if (this.project[j].value===parseInt(data[m].projectID)){
+                data[m].projectID = this.project[j].label;
               }
             }
-            if (data[i].taskStatus===0){
-              data[i].taskStatus="未开始"
-            }else if (data[i].taskStatus===1){
-              data[i].taskStatus="已完成"
-            }else if (data[i].taskStatus===2) {
-              data[i].taskStatus="进行中"
+            if (data[m].taskStatus===0){
+              data[m].taskStatus="未开始";
+            }else if (data[m].taskStatus===1){
+              data[m].taskStatus="已完成";
+            }else if (data[m].taskStatus===2) {
+              data[m].taskStatus="进行中";
             }else {
-              data[i].taskStatus=null
+              data[m].taskStatus="未开始";
             }
-
           }
         }
       });

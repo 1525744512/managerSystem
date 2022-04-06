@@ -20,12 +20,12 @@
                 </template>
                 <MenuItem :name="item.value" v-for="(item, index) in task" :value="item.value" :key="index" @click.native="open(item.value)">{{item.label}} <Tag color="red" style="float: right">{{item.taskEndTime}}</Tag></MenuItem>
               </Submenu>
-              <Submenu name="2">
-                <template slot="title">
-                  已完成
-                </template>
-                <MenuItem :name="item.value" v-for="(item, index) in successTask" :value="item.value" :key="index" @click.native="open(item.value)">{{item.label}} <Tag color="red" style="float: right">{{item.taskEndTime}}</Tag></MenuItem>
-              </Submenu>
+<!--              <Submenu name="2">-->
+<!--                <template slot="title">-->
+<!--                  已完成-->
+<!--                </template>-->
+<!--                <MenuItem :name="item.value" v-for="(item, index) in successTask" :value="item.value" :key="index" @click.native="open(item.value)">{{item.label}} <Tag color="red" style="float: right">{{item.taskEndTime}}</Tag></MenuItem>-->
+<!--              </Submenu>-->
               <Submenu name="3">
                 <template slot="title">
                   其他

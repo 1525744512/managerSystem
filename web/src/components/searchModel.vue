@@ -75,23 +75,25 @@ export default {
     search(){
       this.taskData = [];
       this.projectData = [];
-      this.axios.get(this.api.baseUrl + "/user/getSearch/"+ this.inputSearch).then((res) => {
-        let code = res.data.code;
-        if (code === 200) {
-          for (let i=0;i<res.data.data.taskList.length;i++){
-            this.taskData.push({
-              taskID:JSON.parse(JSON.stringify(res.data.data.taskList[i].taskID)),
-              taskName:JSON.parse(JSON.stringify(res.data.data.taskList[i].taskName))
-            })
+      if (this.inputSearch!==null){
+        this.axios.get(this.api.baseUrl + "/user/getSearch/"+ this.inputSearch + "/" + this.$cookies.get("userID")).then((res) => {
+          let code = res.data.code;
+          if (code === 200) {
+            for (let i=0;i<res.data.data.taskList.length;i++){
+              this.taskData.push({
+                taskID:JSON.parse(JSON.stringify(res.data.data.taskList[i].taskID)),
+                taskName:JSON.parse(JSON.stringify(res.data.data.taskList[i].taskName))
+              })
+            }
+            for (let i=0;i<res.data.data.projectList.length;i++){
+              this.projectData.push({
+                projectID:JSON.parse(JSON.stringify(res.data.data.projectList[i].projectID)),
+                projectName:JSON.parse(JSON.stringify(res.data.data.projectList[i].projectName))
+              })
+            }
           }
-          for (let i=0;i<res.data.data.projectList.length;i++){
-            this.projectData.push({
-              projectID:JSON.parse(JSON.stringify(res.data.data.projectList[i].projectID)),
-              projectName:JSON.parse(JSON.stringify(res.data.data.projectList[i].projectName))
-            })
-          }
-        }
-      });
+        });
+      }
     },
   }
 }
