@@ -143,7 +143,7 @@ export default {
               taskNoStartTotal: JSON.parse(JSON.stringify(res.data.data[i].taskNoStartTotal)),
               taskFinishTotal: JSON.parse(JSON.stringify(res.data.data[i].taskFinishTotal)),
               taskingTotal: JSON.parse(JSON.stringify(res.data.data[i].taskingTotal)),
-              completionRate: JSON.parse(JSON.stringify(res.data.data[i].completionRate))*100,
+              completionRate: Number(JSON.parse(JSON.stringify(res.data.data[i].completionRate))*100).toFixed(1),
             })
             this.formItem.notStartWorkSum =  this.formItem.notStartWorkSum+data[i].taskNoStartTotal;
             this.formItem.workSum = this.formItem.workSum+data[i].taskTotal;
@@ -154,7 +154,7 @@ export default {
           if (this.formItem.workSum===0){
             this.formItem.completionRate =0;
           }else {
-            this.formItem.completionRate = (this.formItem.hadWorkSum/this.formItem.workSum)*100;
+            this.formItem.completionRate = Number((this.formItem.hadWorkSum/this.formItem.workSum)*100).toFixed(1);
 
           }
         }

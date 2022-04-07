@@ -145,7 +145,7 @@ export default {
               projectTaskNoStartTotal: JSON.parse(JSON.stringify(res.data.data[i].projectTaskNoStartTotal)),
               projectTaskFinishTotal: JSON.parse(JSON.stringify(res.data.data[i].projectTaskFinishTotal)),
               projectTaskingTotal: JSON.parse(JSON.stringify(res.data.data[i].projectTaskingTotal)),
-              projectCompletionRate: JSON.parse(JSON.stringify(res.data.data[i].projectCompletionRate))*100,
+              projectCompletionRate: Number(JSON.parse(JSON.stringify(res.data.data[i].projectCompletionRate))*100).toFixed(1),
             })
             this.formItem.notStartWorkSum =  this.formItem.notStartWorkSum+data[i].projectTaskNoStartTotal;
             this.formItem.workSum = this.formItem.workSum+data[i].projectTaskTotal;
@@ -162,7 +162,7 @@ export default {
             }
           }
           this.formItem.projectSum = res.data.data.length;
-          this.formItem.completionRate = (this.formItem.hadWorkSum/this.formItem.workSum)*100;
+          this.formItem.completionRate = Number((this.formItem.hadWorkSum/this.formItem.workSum)*100).toFixed(1);
         }
       });
       return data;
@@ -176,7 +176,7 @@ export default {
   created() {
     this.getCookies();
     this.data1 = this.getProjectProgressReport();
-  }
+  },
 }
 </script>
 

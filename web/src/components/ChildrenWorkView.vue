@@ -4,7 +4,7 @@
       <BreadcrumbItem>当前任务</BreadcrumbItem>
       <BreadcrumbItem @click.native="close">返回父任务</BreadcrumbItem>
     </Breadcrumb>
-      <Form ref="formItem" :model="formItem" :rules="ruleValidate" :label-width="0">
+      <Form ref="formItem" :model="formItem" v-if="flag1" :rules="ruleValidate" :label-width="0">
         <label>标题</label>
         <Input v-model="formItem.taskName" placeholder="任务名称" />
         <row style="margin-top: 1.5%">
@@ -100,6 +100,102 @@
           </Tabs>
         </row>
       </Form>
+    <Form ref="formItem" :model="formItem" v-else-if="!flag1" :rules="ruleValidate" disabled :label-width="0">
+      <label>标题</label>
+      <Input v-model="formItem.taskName" placeholder="任务名称" />
+      <row style="margin-top: 1.5%">
+        <Col span="6">
+          <label>任务状态</label>
+        </Col>
+        <Col span="6">
+          <label>负责人</label>
+        </Col>
+        <Col span="6">
+          <label>开始时间</label>
+        </Col>
+        <Col span="6">
+          <label>完成时间</label>
+        </Col>
+      </row>
+      <row style="margin-bottom: 1.5%;margin-top: 0.5%;">
+        <Select v-model="formItem.taskStatus" clearable style="width: 24.6%;">
+          <Option v-for="item in workState" :value="item.value" :key="item.value" placeholder="选择状态">{{ item.label }}</Option>
+        </Select>
+        <Select v-model="formItem.taskLeader" filterable style="width: 24.6%;margin-left: 0.5%">
+          <Option v-for="item in users" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        </Select>
+        <DatePicker v-model="formItem.taskStartTime"  type="date" placeholder="任务开始时间" style="width: 24.6%;margin-left: 0.5%"></DatePicker>
+        <DatePicker v-model="formItem.taskEndTime"  type="date" placeholder="任务截至时间" style="width: 24.6%;margin-left: 0.5%"></DatePicker>
+      </row>
+      <row style="margin-top: 2%">
+        <Tabs value="name1" style="width: 100%">
+          <TabPane label="任务信息" name="name1">
+            <Row>
+              <Col span="12">
+                <label>优先级</label>
+              </Col>
+              <Col span="12">
+                <label style="margin-left: 5%">参与人</label>
+              </Col>
+            </Row>
+            <Row>
+              <Col span="12">
+                <Select v-model="formItem.taskPriority" filterable style="width: 95%">
+                  <Option v-for="item in Priority" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                </Select>
+              </Col>
+              <Col span="12">
+                <Select v-model="formItem.userID" multiple filterable :max-tag-count="2"
+                        :max-tag-placeholder="maxTagPlaceholder" style="width: 95%;margin-left: 5%">
+                  <Option v-for="item in users" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                </Select>
+              </Col>
+            </Row>
+            <row>
+              <label style="margin-top: 2%">描述</label>
+            </row>
+            <row style="margin-bottom: 1.5%;margin-top: 0.5%;height: 100px">
+              <Col>
+                <quill-editor
+                    v-model="formItem.taskDescribe"
+                    ref="myQuillEditor"
+                    :options="editorOption"
+                    @blur="onEditorBlur($event)" @focus="onEditorFocus($event)"
+                    @change="onEditorChange($event)">
+                </quill-editor>
+              </Col>
+            </row>
+          </TabPane>
+          <TabPane label="附件" name="name3">
+            <row>
+              <Col span="20">
+                <Upload
+                    ref="upload"
+                    :before-upload="handleUpload"
+                    :data="uploadData"
+                    action="//81.69.201.78:8550/task/upload"
+                >
+                  <Button icon="ios-cloud-upload-outline" size="small">选择文件上传</Button>
+                </Upload>
+                <div v-if="file!==null">上传文件: {{ file.name }}<Button type="text" @click="upload" :loading="loadingStatus">{{ loadingStatus ? 'Uploading' : '点击上传' }}</Button></div>
+              </Col>
+              <Col>
+                <Span>共{{taskFileTotal}}个附件</Span>
+              </Col>
+            </row>
+            <Table height="300" :columns="pLife" :data="uploadList" style="margin-top: 2%" @on-row-click="download">
+              <template slot-scope="{ row }" slot="taskFileName">
+                <strong>{{ row.taskFileName }}</strong>
+              </template>
+              <template slot-scope="{ row, index }" slot="action">
+                <Button size="small"  style="margin-right: 5px" type="primary"  @click="download(index)">下载</Button>
+                <Button type="error" size="small" @click="removeTaskFile(index)">删除</Button>
+              </template>
+            </Table>
+          </TabPane>
+        </Tabs>
+      </row>
+    </Form>
     <div slot="footer">
       <Button type="text" @click="cancel">取消</Button>
       <Button type="primary" @click="ok">确定</Button>
@@ -199,6 +295,7 @@ export default {
       loadingStatus: false,
       uploadData:{'taskID':null},
       taskFileTotal:0,
+      flag1:false,
     }
   },
   methods: {
@@ -206,6 +303,7 @@ export default {
       this.modal =true;
       this.formItem.parentTask = parentTaskID;
       this.formItem.projectID = projectID;
+      this.flag1 = true;
     },
     clickInit(data){
       this.modal =true;
@@ -214,6 +312,11 @@ export default {
       this.formItem.projectID = data.projectID;
       this.formItem.taskStatus =  data.taskStatus;
       this.formItem.taskLeader =   data.taskLeader;
+      if (this.formItem.taskLeader!==0){
+        this.flag1 = this.$cookies.get("userID") === this.formItem.taskLeader.toString() || this.$cookies.get("userOwner") === this.$cookies.get("userID") || this.$cookies.get("userRole") === "1";
+      }else {
+        this.flag1 = true;
+      }
       this.formItem.taskStartTime = data.taskStartTime;
       this.formItem.taskEndTime = data.taskEndTime;
       this.formItem.taskPriority = data.taskPriority;
@@ -255,9 +358,29 @@ export default {
       } else {
         that.$Message.error("请输入任务名称或者选择项目!");
       }
+      this.formItem.taskName =  null;
+      this.formItem.taskID =  null;
+      this.formItem.projectID = null;
+      this.formItem.taskStatus =  null;
+      this.formItem.taskLeader =   null;
+      this.formItem.taskStartTime = null;
+      this.formItem.taskEndTime = null;
+      this.formItem.taskPriority = null;
+      this.formItem.userID = null;
+      this.formItem.taskDescribe= null;
     },
     cancel () {
       this.modal = false;
+      this.formItem.taskName =  null;
+      this.formItem.taskID =  null;
+      this.formItem.projectID = null;
+      this.formItem.taskStatus =  null;
+      this.formItem.taskLeader =   null;
+      this.formItem.taskStartTime = null;
+      this.formItem.taskEndTime = null;
+      this.formItem.taskPriority = null;
+      this.formItem.userID = null;
+      this.formItem.taskDescribe= null;
     },
     handleUpload (file) {
       this.file = file;

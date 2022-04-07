@@ -80,10 +80,12 @@ export default {
           let code = res.data.code;
           if (code === 200) {
             for (let i=0;i<res.data.data.taskList.length;i++){
-              this.taskData.push({
-                taskID:JSON.parse(JSON.stringify(res.data.data.taskList[i].taskID)),
-                taskName:JSON.parse(JSON.stringify(res.data.data.taskList[i].taskName))
-              })
+              if (JSON.parse(JSON.stringify(res.data.data.taskList[i].taskStatus))!==1) {
+                this.taskData.push({
+                  taskID: JSON.parse(JSON.stringify(res.data.data.taskList[i].taskID)),
+                  taskName: JSON.parse(JSON.stringify(res.data.data.taskList[i].taskName))
+                })
+              }
             }
             for (let i=0;i<res.data.data.projectList.length;i++){
               this.projectData.push({

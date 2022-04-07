@@ -119,11 +119,9 @@ export default {
               that.$router.push("/mainPage");
               this.flag = true;
             } else {
-              // todo 登录失败处理
               that.$Message.error(msg);
             }
           }).catch(function() {
-            //todo 接口访问异常处理
             that.$Message.error("接口访问失败!");
           });
         } else {

@@ -98,11 +98,9 @@ export default {
                }
              }
          } else {
-             // todo 登录失败处理
              that.$Message.error(msg);
         }
        }).catch(function() {
-           //todo 接口访问异常处理
          that.$Message.error("新建任务接口访问失败!");
        });
      },

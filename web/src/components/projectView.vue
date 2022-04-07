@@ -496,8 +496,8 @@ export default {
           this.formWorkDescribe.haveInHand = JSON.parse(JSON.stringify(res.data.data.taskingTotal));
           this.formWorkDescribe.notStarted = JSON.parse(JSON.stringify(res.data.data.taskNoStartTotal));
           this.formWorkDescribe.delayTaskTotal = JSON.parse(JSON.stringify(res.data.data.delayTaskTotal));
-          this.formWorkDescribe.completionRate = JSON.parse(JSON.stringify(res.data.data.completionRate))*100;
-          this.formWorkDescribe.delayRate = JSON.parse(JSON.stringify(res.data.data.delayRate))*100;
+          this.formWorkDescribe.completionRate = Number(JSON.parse(JSON.stringify(res.data.data.completionRate))*100).toFixed(1);
+          this.formWorkDescribe.delayRate = Number(JSON.parse(JSON.stringify(res.data.data.delayRate))*100).toFixed(1);
           if (res.data.data.projectStatus!==null){
             if ( JSON.parse(JSON.stringify(res.data.data.projectStatus)) ===1){
               this.formWork.projectStatusLabel = "正常";
@@ -678,6 +678,7 @@ export default {
   mounted() {
     const that = this;
     Utils.$on('work', function() {
+      that.data1 = [];
       that.data4 = that.getProjectTask();
       that.getProjectAll();
     });

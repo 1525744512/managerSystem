@@ -88,7 +88,6 @@ export default {
   methods: {
     ok() {
       if (this.formAccount.oldPassword!==null){
-        window.alert( this.formAccount.oldPassword)
         if (this.oldPassword === this.formAccount.oldPassword) {
           if (this.formAccount.mail!==null){
             var format1 = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;

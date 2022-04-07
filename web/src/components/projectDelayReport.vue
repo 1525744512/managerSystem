@@ -158,7 +158,7 @@ export default {
               delayTaskNotFinishTotal: JSON.parse(JSON.stringify(res.data.data[i].delayTaskNotFinishTotal)),
               delayTaskFinishTotal: JSON.parse(JSON.stringify(res.data.data[i].delayTaskFinishTotal)),
               projectTaskingTotal: JSON.parse(JSON.stringify(res.data.data[i].projectTaskingTotal)),
-              projectDelayRate: JSON.parse(JSON.stringify(res.data.data[i].projectDelayRate))*100,
+              projectDelayRate: Number(JSON.parse(JSON.stringify(res.data.data[i].projectDelayRate))*100).toFixed(1),
             })
             this.formItem.notStartWorkSum =  this.formItem.notStartWorkSum+data[i].projectTaskNoStartTotal;
             this.formItem.pendingWork = this.formItem.pendingWork + data[i].projectPendingTaskTotal;
@@ -176,7 +176,7 @@ export default {
             }
           }
           this.formItem.projectSum = res.data.data.length;
-          this.formItem.projectDelayRate = ((this.formItem.delayWorkSum)/this.formItem.pendingWork)*100;
+          this.formItem.projectDelayRate = Number(((this.formItem.delayWorkSum)/this.formItem.pendingWork)*100).toFixed(1);
         }
       });
       return data;
