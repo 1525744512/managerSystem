@@ -235,6 +235,7 @@ export default {
     },
     ok () {
       const that = this;
+      this.modal = false;
       if (this.formItem.taskName!=="") {
         // 校验成功 发起请求
         this.axios.post(this.api.baseUrl + "/task/updateTask",this.formItem).then((res) => {
@@ -242,7 +243,6 @@ export default {
           let msg = res.data.msg;
           if (code === 200) {
             that.$Message.success(msg);
-            this.modal = false;
             Utils.$emit('demo','msg');
           } else {
             // todo 登录失败处理

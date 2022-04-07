@@ -5,7 +5,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: url("../background.jpg") no-repeat;
+    background: url("../back.jpg") no-repeat;
     background-size: cover;
     min-width: 100%;
     min-height: 100%;

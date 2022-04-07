@@ -470,6 +470,7 @@ export default {
     },
     ok () {
       const that = this;
+      this.modal = false;
       if (this.formItem.taskName!=="") {
         // 校验成功 发起请求
         this.axios.post(this.api.baseUrl + "/task/updateTask",this.formItem).then((res) => {
@@ -477,17 +478,6 @@ export default {
           let msg = res.data.msg;
           if (code === 200) {
             that.$Message.success(msg);
-            this.modal = false;
-            this.formItem.taskName =  null;
-            this.formItem.taskStatus =  null;
-            this.formItem.taskLeader =   null;
-            this.formItem.taskStartTime = null;
-            this.formItem.taskEndTime = null;
-            this.formItem.taskPriority = null;
-            this.formItem.userID = [];
-            this.formItem.taskDescribe=null;
-            this.ChildrenTaskData = [];
-            this.uploadList = [];
           } else {
             // todo 登录失败处理
             that.$Message.error(msg);
@@ -496,6 +486,16 @@ export default {
           //todo 接口访问异常处理
           that.$Message.error("新建任务接口访问失败!");
         });
+        this.formItem.taskName =  null;
+        this.formItem.taskStatus =  null;
+        this.formItem.taskLeader =   null;
+        this.formItem.taskStartTime = null;
+        this.formItem.taskEndTime = null;
+        this.formItem.taskPriority = null;
+        this.formItem.userID = [];
+        this.formItem.taskDescribe=null;
+        this.ChildrenTaskData = [];
+        this.uploadList = [];
       } else {
         that.$Message.error("请输入任务名称或者选择项目!");
       }

@@ -6,11 +6,12 @@
     </p>
     <Layout>
       <Content style="margin-left: 1.5vh;">
-        <Table stripe :columns="columns1" :data="data2"  @on-row-click="open" style="margin-top: 10vh;width: 175vh;">
+        <Table stripe :columns="columns1" :data="data2" style="margin-top: 10vh;width: 175vh;">
           <template slot-scope="{ row }" slot="taskFileName">
             <strong>{{ row.projectName }}</strong>
           </template>
           <template slot-scope="{ row, index }" slot="action">
+            <Button type="primary" @click="open(index)" size="small">查看</Button>
             <Button type="primary" @click="update(index)" size="small">完成</Button>
           </template>
         </Table>
@@ -115,8 +116,8 @@ export default {
     changePage (value) {
       this.data2 = this.getProject(value);
     },
-    open(data) {
-      this.$router.push({name:'projectView', params: { projectID: data.projectID }});
+    open(index) {
+      this.$router.push({name:'projectView', params: { projectID:  this.data2[index].projectID }});
     },
   },
   created() {
