@@ -95,7 +95,7 @@ export default {
               departmentID:  JSON.parse(JSON.stringify(res.data.data[i].departmentName)),
               projectLeader:  JSON.parse(JSON.stringify(res.data.data[i].projectLeader)),
               projectStatus:  JSON.parse(JSON.stringify(res.data.data[i].projectStatus)),
-              projectSchedule:  JSON.parse(JSON.stringify(res.data.data[i].projectSchedule))*100,
+              projectSchedule:  Number(JSON.parse(JSON.stringify(res.data.data[i].projectSchedule))*100).toFixed(1),
               projectCreatorTime:  JSON.parse(JSON.stringify(res.data.data[i].projectCreatorTime)),
             })
             if (data[i].projectStatus===1){
