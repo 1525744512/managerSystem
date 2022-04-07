@@ -83,6 +83,7 @@ export default {
                   this.$cookies.set("userID", res.data.data.userID);
                   this.$cookies.set("userCompany",res.data.data.userCompanyID);
                   this.$cookies.set("userOwner", res.data.data.userOwner);
+                  this.$cookies.set("userRole",res.data.data.userRoleId);
                   that.$router.push("/mainPage");
                 } else {
                     // todo 登录失败处理
@@ -115,7 +116,6 @@ export default {
               this.$cookies.set("userID", res.data.data.userID);
               this.$cookies.set("userCompany",res.data.data.userCompanyID);
               this.$cookies.set("userOwner", res.data.data.userOwner);
-              this.$cookies.set("userRole",res.data.data.userRoleId);
               that.$router.push("/mainPage");
               this.flag = true;
             } else {

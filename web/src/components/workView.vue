@@ -1,6 +1,6 @@
 <template>
   <modal v-model="modal" title="个人任务详情" width="60" :styles="{top: '16px'}"  @on-ok="ok"  @on-cancel="cancel">
-      <Form ref="formItem" :model="formItem" v-if="!flag1" :rules="ruleValidate" :label-width="0">
+      <Form ref="formItem" :model="formItem" v-if="flag1" :rules="ruleValidate" :label-width="0">
         <label>标题</label>
         <Input v-model="formItem.taskName" placeholder="任务标题" />
         <row style="margin-top: 1.5%">
@@ -116,7 +116,7 @@
           </Tabs>
         </row>
       </Form>
-      <Form ref="formItem" :model="formItem" v-else-if="flag1" :rules="ruleValidate"  disabled :label-width="0">
+      <Form ref="formItem" :model="formItem" v-else-if="!flag1" :rules="ruleValidate"  disabled :label-width="0">
       <label>标题</label>
       <Input v-model="formItem.taskName" placeholder="任务标题" />
       <row style="margin-top: 1.5%">
@@ -258,7 +258,7 @@ export default {
         userCompanyID:this.$cookies.get("userCompany"),
         taskName: '',
         taskStatus: '',
-        taskLeader: '',
+        taskLeader: null,
         taskStartTime:'',
         taskEndTime:'',
         taskPriority:'',
@@ -361,7 +361,6 @@ export default {
   },
   methods: {
     init(value){
-      this.modal =true;
       const that = this;
       this.formItem.taskID = value;
       this.axios.get(this.api.baseUrl + "/task/getTask/"+ value + "/" + this.$cookies.get("userCompany")).then((res) => {
@@ -378,9 +377,9 @@ export default {
           }
           this.formItem.taskLeader =   JSON.parse(JSON.stringify(res.data.data.taskLeader));
           if (this.formItem.taskLeader!==0){
-            if (this.$cookies.get("userID")!== this.formItem.taskLeader.toString()&&this.$cookies.get("userOwner")!==this.$cookies.get("userID")){
-              this.flag1 = true;
-            }
+            this.flag1 = this.$cookies.get("userID") === this.formItem.taskLeader.toString() || this.$cookies.get("userOwner") === this.$cookies.get("userID") || this.$cookies.get("userRole") === "1";
+          }else {
+            this.flag1 = true;
           }
           this.formItem.taskStartTime =  JSON.parse(JSON.stringify(res.data.data.taskStartTime));
           this.formItem.taskEndTime =  JSON.parse(JSON.stringify(res.data.data.taskEndTime));
@@ -438,6 +437,8 @@ export default {
           this.taskFileTotal =  res.data.data.length;
         }
       });
+      this.modal =true;
+
     },
     maxTagPlaceholder(num) {
       return 'more ' + num;
@@ -597,7 +598,6 @@ export default {
         this.$router.push("/Login")
       }
     }
-
   },
   created() {
     this.getCookies();

@@ -12,6 +12,10 @@
             <Icon type="md-chatbubbles" />
             角色管理
           </MenuItem>
+          <MenuItem name="3" @click.native="openProjectManage">
+            <Icon type="md-chatbubbles" />
+            项目管理
+          </MenuItem>
         </MenuGroup>
       </Menu>
     </Sider>
@@ -35,6 +39,9 @@ export default {
     },
     openRoleManage(){
       this.$router.push('/roleManage')
+    },
+    openProjectManage(){
+      this.$router.push('/projectManager')
     }
   }
 }

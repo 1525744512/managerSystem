@@ -445,7 +445,7 @@ export default {
             }else if (data[i].taskStatus===2) {
               data[i].taskStatus="进行中"
             }else {
-              data[i].taskStatus=null
+              data[i].taskStatus="未开始"
             }
             if (data[i].taskPriority==="0"){
               data[i].taskPriority="最低"
@@ -478,7 +478,7 @@ export default {
           this.formItem.projectID = JSON.parse(JSON.stringify(res.data.data.projectID));
           this.formItem.projectName =   JSON.parse(JSON.stringify(res.data.data.projectName));
           this.formItem.projectCreator =   JSON.parse(JSON.stringify(res.data.data.projectCreatorID));
-          if (this.formItem.projectCreator===parseInt(this.$cookies.get("userID"))||parseInt(this.$cookies.get("userID"))===JSON.parse(JSON.stringify(res.data.data.userOwner))){
+          if (this.formItem.projectCreator===parseInt(this.$cookies.get("userID"))||this.$cookies.get("userOwner") === this.$cookies.get("userID") || this.$cookies.get("userRole") === "1"){
             this.show = true;
           }
           if (res.data.data.projectLeader!==null){

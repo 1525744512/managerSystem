@@ -26,6 +26,7 @@
 <!--                </template>-->
 <!--                <MenuItem :name="item.value" v-for="(item, index) in successTask" :value="item.value" :key="index" @click.native="open(item.value)">{{item.label}} <Tag color="red" style="float: right">{{item.taskEndTime}}</Tag></MenuItem>-->
 <!--              </Submenu>-->
+              <Divider />
               <Submenu name="3">
                 <template slot="title">
                   其他

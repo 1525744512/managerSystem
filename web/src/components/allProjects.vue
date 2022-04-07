@@ -2,7 +2,7 @@
   <Card :bordered="false" style="height: 86vh;margin: 20px;width: 97%">
     <p slot="title">全部项目</p>
     <Input search placeholder="搜索项目(按Enter搜索)" style="width: 50vh" v-model="searchProject" @keyup.enter.native="search" @input="search"/>
-    <Button type="primary" icon="md-add" @click="add" style="float: right">新建项目</Button>
+    <Button v-if="isProject||isOwnerFlag" type="primary" icon="md-add" @click="add" style="float: right">新建项目</Button>
     <project-add v-if="flag" ref="projectAdd"></project-add>
     <Table stripe :columns="columns1" :data="data2" v-model="data1" style="margin-top: 2%;width: 100%" height="400" @on-row-click="open"></Table>
   </Card>
@@ -68,6 +68,8 @@ export default {
       data2:this.getPersonalProject(),
       flag: false,
       searchProject:null,
+      isOwnerFlag:false,
+      isProject:false,
     }
   },
   methods: {
@@ -129,11 +131,18 @@ export default {
       if (this.$cookies.get("userID")===null){
         this.$router.push("/Login")
       }
-    }
+    },
+    getIsFlag(){
+      if (this.$cookies.get("userOwner") === "1"||this.$cookies.get("userRole")==="1") {
+        this.isOwnerFlag = true;
+        this.isProject = true;
+      }
+    },
   },
   created() {
     this.getCookies();
     this.data1 = this.getPersonalProject();
+    this.getIsFlag();
   }
 }
 </script>

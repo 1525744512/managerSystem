@@ -29,6 +29,7 @@ import projectDelayReport from "@/components/projectDelayReport";
 import memberDelayReport from "@/components/memberDelayReport";
 import userManage from "@/components/userManage";
 import roleManage from "@/components/roleManage";
+import projectManager from "@/components/projectManager";
 
 const routes = [
     {
@@ -132,6 +133,11 @@ const routes = [
                 path: '/roleManage',
                 name: 'roleManage',
                 component: roleManage,
+            },
+            {
+                path: '/projectManager',
+                name: 'projectManager',
+                component: projectManager,
             },
         ]
     }

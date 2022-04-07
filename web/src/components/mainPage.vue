@@ -19,7 +19,7 @@
             <Icon type="ios-search" ></Icon>
             <span>搜索</span>
           </MenuItem>
-          <MenuItem name="1-5" v-show="isOwnerFlag" @click.native="openInviteMembers">
+          <MenuItem name="1-5" v-show="isOwnerFlag||isProject" @click.native="openInviteMembers">
             <Icon type="md-person-add"></Icon>
             <span>邀请用户</span>
           </MenuItem>
@@ -33,11 +33,11 @@
       <router-view></router-view>
       <!--      新建弹出框-->
       <Drawer title="新建" :closable="false" v-model="value1" width="9%">
-        <row>
+        <row v-if="isProject||isOwnerFlag">
           <label @click="addProject"><Icon type="ios-folder" style="margin-right: 0.5vh"/>新建项目</label>
         </row>
         <project-add v-if="flag2" ref="projectAdd"></project-add>
-        <Divider />
+        <Divider v-if="isProject||isOwnerFlag" />
         <row style="margin-top: 2vh">
           <label @click="add"><Icon type="md-folder" style="margin-right: 0.5vh"/>新建任务</label>
         </row>
@@ -52,7 +52,7 @@
         <account-settings v-if="flag4" ref="accountSettings"></account-settings>
         <Divider style="width: 100%"/>
 
-        <row v-if="isOwnerFlag">
+        <row v-if="isOwnerFlag||isProject">
           <label @click="openBackstage"> <Icon type="ios-home" style="margin-right: 0.5vh"/>进入企业后台</label>
         </row>
 
@@ -88,6 +88,7 @@ export default {
       openDialog: false,
       isOwnerFlag: false,
       searchFlag: false,
+      isProject:false,
     }
   },
   methods: {
@@ -125,8 +126,9 @@ export default {
       });
     },
     isOwner() {
-      if (this.$cookies.get("userOwner") === "1"||this.$cookies.get("userRole")===1) {
+      if (this.$cookies.get("userOwner") === "1"||this.$cookies.get("userRole")==="1") {
         this.isOwnerFlag = true;
+        this.isProject = true;
       }
     },
     exit() {
