@@ -12,7 +12,7 @@
           </template>
           <template slot-scope="{ row, index }" slot="action">
             <Button type="primary" @click="open(index)" size="small">查看</Button>
-            <Button type="primary" @click="update(index)" size="small">完成</Button>
+            <Button type="primary" style="margin-left: 1%" @click="update(index)" size="small">完成</Button>
           </template>
         </Table>
         <div style="margin: 10px;overflow: hidden">
