@@ -77,21 +77,62 @@ export default {
       oldPassword: '',
       newPassword: '',
       formAccount: {
-        userID:'',
-        user: '',
+        userID:null,
+        user: null,
         oldPassword: null,
         newPassword: null,
-        mail: ''
+        mail: null
       },
     }
   },
   methods: {
     ok() {
-      if (this.formAccount.oldPassword!==null){
-        if (this.oldPassword === this.formAccount.oldPassword) {
-          if (this.formAccount.mail!==null){
-            var format1 = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
-            if (!this.formAccount.mail.match(format1)) {
+      if (this.formAccount.user===null||this.formAccount.user===""){
+        this.$Message.error("请输入用户名");
+      }else {
+        if (this.formAccount.oldPassword!==null&&this.formAccount.oldPassword!==""){
+          if (this.oldPassword === this.formAccount.oldPassword) {
+            if (this.formAccount.newPassword!==null&&this.formAccount.newPassword!=="") {
+              if (this.formAccount.mail !== null&&this.formAccount.mail!=="") {
+                var format1 = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+                if (!this.formAccount.mail.match(format1)) {
+                  this.$Message.error("请输入正确邮箱格式");
+                } else {
+                  this.axios.post(this.api.baseUrl + "/user/updateMyUser/", this.formAccount).then((res) => {
+                    let code = res.data.code;
+                    if (code === 200) {
+                      this.modal = false;
+                      this.oldPassword = null;
+                      this.formAccount.oldPassword = null;
+                      this.formAccount.newPassword = null;
+                      this.formAccount.user = null;
+                      this.formAccount.mail = null;
+                    }
+                  });
+                }
+              } else {
+                this.axios.post(this.api.baseUrl + "/user/updateMyUser/", this.formAccount).then((res) => {
+                  let code = res.data.code;
+                  if (code === 200) {
+                    this.modal = false;
+                    this.oldPassword = null;
+                    this.formAccount.oldPassword = null;
+                    this.formAccount.newPassword = null;
+                    this.formAccount.user = null;
+                    this.formAccount.mail = null;
+                  }
+                });
+              }
+            }else {
+              this.$Message.error("请输入新密码");
+            }
+          } else {
+            this.$Message.error("请输入正确旧密码");
+          }
+        }else {
+          if (this.formAccount.mail!==null&&this.formAccount.mail!==""){
+            var format = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+            if (!this.formAccount.mail.match(format)) {
               this.$Message.error("请输入正确邮箱格式");
             }else {
               this.axios.post(this.api.baseUrl + "/user/updateMyUser/", this.formAccount).then((res) => {
@@ -106,7 +147,7 @@ export default {
                 }
               });
             }
-          }else {
+          }else{
             this.axios.post(this.api.baseUrl + "/user/updateMyUser/", this.formAccount).then((res) => {
               let code = res.data.code;
               if (code === 200) {
@@ -119,41 +160,9 @@ export default {
               }
             });
           }
-        } else {
-          this.$Message.error("请输入正确旧密码");
-        }
-      }else {
-        if (this.formAccount.mail!==null){
-          var format = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
-          if (!this.formAccount.mail.match(format)) {
-            this.$Message.error("请输入正确邮箱格式");
-          }else {
-            this.axios.post(this.api.baseUrl + "/user/updateMyUser/", this.formAccount).then((res) => {
-              let code = res.data.code;
-              if (code === 200) {
-                this.modal = false;
-                this.oldPassword = null;
-                this.formAccount.oldPassword = null;
-                this.formAccount.newPassword = null;
-                this.formAccount.user = null;
-                this.formAccount.mail = null;
-              }
-            });
-          }
-        }else {
-          this.axios.post(this.api.baseUrl + "/user/updateMyUser/", this.formAccount).then((res) => {
-            let code = res.data.code;
-            if (code === 200) {
-              this.modal = false;
-              this.oldPassword = null;
-              this.formAccount.oldPassword = null;
-              this.formAccount.newPassword = null;
-              this.formAccount.user = null;
-              this.formAccount.mail = null;
-            }
-          });
         }
       }
+
     },
     cancel() {
       this.modal = false;

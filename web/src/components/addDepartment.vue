@@ -21,7 +21,7 @@ export default {
     return{
       modal8:false,
       formDepartment:{
-        departmentName:'',
+        departmentName:null,
         parentDepartmentID:'',
         type:'',
         userCompanyID:'',
@@ -35,36 +35,42 @@ export default {
       this.formDepartment.parentDepartmentID = null;
     },
     ok () {
-      if (this.formDepartment.type===0){
-        this.axios.post(this.api.baseUrl + "/department/addDepartment/" + this.formDepartment.departmentName +"/"+this.formDepartment.parentDepartmentID +"/" + this.$cookies.get("userCompany")).then((res) => {
-          let code = res.data.code;
-          let msg = res.data.msg;
-          if (code === 200) {
-            this.$Message.success(msg);
-            Utils.$emit('tree','msg');
-            this.modal8 = false;
-            this.formDepartment.departmentName = null;
-            this.formDepartment.parentDepartmentID = null;
-          }else {
-            this.$Message.error(msg);
-          }
-        });
+      if (this.formDepartment.departmentName!==null&&this.formDepartment.departmentName!==""){
+        if (this.formDepartment.type===0){
+          this.axios.post(this.api.baseUrl + "/department/addDepartment/" + this.formDepartment.departmentName +"/"+this.formDepartment.parentDepartmentID +"/" + this.$cookies.get("userCompany")).then((res) => {
+            let code = res.data.code;
+            let msg = res.data.msg;
+            if (code === 200) {
+              this.$Message.success(msg);
+              Utils.$emit('tree','msg');
+              this.modal8 = false;
+              this.formDepartment.departmentName = null;
+              this.formDepartment.parentDepartmentID = null;
+            }else {
+              this.$Message.error(msg);
+            }
+          });
+        }else {
+          this.formDepartment.userCompanyID = this.$cookies.get("userCompany");
+          this.axios.post(this.api.baseUrl + "/department/updateDepartment",this.formDepartment).then((res) => {
+            let code = res.data.code;
+            let msg = res.data.msg;
+            if (code === 200) {
+              this.$Message.success(msg);
+              Utils.$emit('treeUpdate','msg');
+              this.modal8 = false;
+              this.formDepartment.departmentName = null;
+              this.formDepartment.parentDepartmentID = null;
+            }else {
+              this.$Message.error(msg);
+            }
+          });
+        }
       }else {
-        this.formDepartment.userCompanyID = this.$cookies.get("userCompany");
-        this.axios.post(this.api.baseUrl + "/department/updateDepartment",this.formDepartment).then((res) => {
-          let code = res.data.code;
-          let msg = res.data.msg;
-          if (code === 200) {
-            this.$Message.success(msg);
-            Utils.$emit('treeUpdate','msg');
-            this.modal8 = false;
-            this.formDepartment.departmentName = null;
-            this.formDepartment.parentDepartmentID = null;
-          }else {
-            this.$Message.error(msg);
-          }
-        });
+        this.$Message.error("请输入部门名称")
       }
+
+
     },
     init(value,type) {
       this.modal8=true;

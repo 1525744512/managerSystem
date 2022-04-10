@@ -9,7 +9,7 @@
           </Breadcrumb>
         </Col>
       </row>
-      <Form :ref="formItem" v-model="formItem">
+      <Form v-if="!show" disabled  :ref="formItem" v-model="formItem">
         <row>
           <Col span="7">
             <label>负责人</label>
@@ -78,7 +78,7 @@
             <label>项目成员</label>
           </Col>
           <Col style="margin-left: 0.5%">
-            <Button icon="md-add" type="text" size="small">添加成员</Button>
+            <Button icon="md-add" type="text" size="small" @click="addUser">添加成员</Button>
           </Col>
         </row>
         <row align="middle">
@@ -92,6 +92,9 @@
         <row>
           <Col>
             <Table border v-if="show" :columns="users" height="270" :data="data3" v-model="data1" style="width: 98vh;margin-top: 1.5%">
+              <template slot-scope="{ row }" slot="userName">
+                <strong>{{ row.userName }}</strong>
+              </template>
               <template slot-scope="{ row, index }" slot="action" >
                 <Button type="error" size="small"  @click="remove(index)">删除</Button>
               </template>
@@ -101,7 +104,105 @@
           </Col>
         </row>
       </Form>
+
+      <Form v-if="show" :ref="formItem" v-model="formItem">
+        <row>
+          <Col span="7">
+            <label>负责人</label>
+          </Col>
+          <Col span="7">
+            <label>开始时间</label>
+          </Col>
+          <Col span="7">
+            <label>结束时间</label>
+          </Col>
+        </row>
+        <row>
+          <Select v-model="formItem.projectLeader" filterable style="width: 24.6%;">
+            <Option v-for="item in workUsers" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
+          <DatePicker
+              v-model="formItem.projectStartTime"
+              :open="open"
+              :value="formItem.projectStartTime"
+              confirm
+              type="date"
+              @on-change="handleChangeStart"
+              @on-clear="handleClear(0)"
+              @on-ok="handleOk(0)"
+              style="width: 24.6%;margin-left: 4.5%"
+          >
+            <a href="javascript:void(0)" @click="handleClick(0)">
+              <Icon type="ios-calendar-outline"></Icon>
+              <template v-if="formItem.projectStartTime === ''">任务开始时间</template>
+              <template v-else>{{ formItem.projectStartTime }}</template>
+            </a>
+          </DatePicker>
+          <DatePicker
+              v-model="formItem.projectEndTime"
+              :open="open2"
+              :value="formItem.projectEndTime"
+              confirm
+              type="date"
+              @on-change="handleChangeEnd"
+              @on-clear="handleClear(1)"
+              @on-ok="handleOk(1)"
+              style="width: 24.6%;margin-left: 4.5%"
+          >
+            <a href="javascript:void(0)" @click="handleClick">
+              <Icon type="ios-calendar-outline"></Icon>
+              <template v-if="formItem.projectEndTime === ''">任务结束时间</template>
+              <template v-else>{{ formItem.projectEndTime }}</template>
+            </a>
+          </DatePicker>
+        </row>
+        <row>
+          <label style="margin-top: 1.5%">项目描述</label>
+          <Input disabled :border="false" placeholder="无描述" v-model="formItem.projectDescribe" v-if="flag1"/>
+          <Input v-model="formItem.projectDescribe" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入描述"
+                 v-if="flag2"/>
+          <div style="width: 100%">
+            <Button type="primary" v-if="flag2" @click="submit" style="float: right;margin-top: 1.5%">保存</Button>
+            <Button type="text" v-if="flag2" @click="close" style="float: right;margin-top: 1.5%">取消</Button>
+
+          </div>
+          <label v-if="flag1" style="margin-left: 1%" @click="openDescribe"><font color="#6495ed">编辑</font></label>
+        </row>
+        <Divider/>
+        <row align="middle">
+          <Col span="20">
+            <label>项目成员</label>
+          </Col>
+          <Col style="margin-left: 0.5%">
+            <Button icon="md-add" type="text" size="small" @click="addUser">添加成员</Button>
+          </Col>
+        </row>
+        <row align="middle">
+          <Col span="22">
+            <Input suffix="ios-search" placeholder="搜索成员(按Enter搜索)" style="width: auto" search v-model="searchProjectPersonal" @keyup.enter.native="search" @input="search"/>
+          </Col>
+          <Col>
+            <label>共{{totalPerson}}人</label>
+          </Col>
+        </row>
+        <row>
+          <Col>
+            <Table border v-if="show" :columns="users" height="270" :data="data3" v-model="data1" style="width: 98vh;margin-top: 1.5%">
+              <template slot-scope="{ row }" slot="userName">
+                <strong>{{ row.userName }}</strong>
+              </template>
+              <template slot-scope="{ row, index }" slot="action" >
+                <Button type="error" size="small"  @click="remove(index)">删除</Button>
+              </template>
+            </Table>
+            <Table border v-if="!show" :columns="usersShow" height="270" :data="data3" v-model="data1" style="width: 98vh;margin-top: 1.5%">
+            </Table>
+          </Col>
+        </row>
+      </Form>
+
     </Card>
+
     <Card :bordered="false" style="float: right;width: 35%;margin-left: 2%">
       <row slot="title" align="middle">
         <Col span="5">
@@ -225,6 +326,18 @@
         <work-view v-if="flag4" ref="workView"></work-view>
       </row>
     </modal>
+
+    <!--    添加成员-->
+    <modal v-model="modal3" title="添加成员" @on-ok="addOk"  @on-cancel="addCancel">
+      <Select v-model="addUserID" multiple filterable :max-tag-count="2"
+              :max-tag-placeholder="maxTagPlaceholder" style="width: 95%">
+        <Option v-for="item in workUsers" :value="item.value" :key="item.value">{{ item.label }}</Option>
+      </Select>
+      <div slot="footer">
+        <Button type="text" @click="addCancel">取消</Button>
+        <Button type="primary" @click="addOk">确定</Button>
+      </div>
+    </modal>
   </div>
 </template>
 
@@ -270,12 +383,14 @@ export default {
         completionRate: '',
         delayRate: ''
       },
+      addUserID:[],
       flag1: true,
       flag2: false,
       flag3: false,
       flag4:false,
       modal: false,
       modal2: false,
+      modal3:false,
       open: false,
       open2: false,
       workUsers: [],
@@ -400,6 +515,9 @@ export default {
     closeThisVue() {
       this.$router.push('allProjects');
     },
+    maxTagPlaceholder(num) {
+      return 'more ' + num;
+    },
     updata() {
       this.modal = true
     },
@@ -478,11 +596,11 @@ export default {
           this.formItem.projectID = JSON.parse(JSON.stringify(res.data.data.projectID));
           this.formItem.projectName =   JSON.parse(JSON.stringify(res.data.data.projectName));
           this.formItem.projectCreator =   JSON.parse(JSON.stringify(res.data.data.projectCreatorID));
-          if (this.formItem.projectCreator===parseInt(this.$cookies.get("userID"))||this.$cookies.get("userOwner") === this.$cookies.get("userID") || this.$cookies.get("userRole") === "1"){
-            this.show = true;
-          }
           if (res.data.data.projectLeader!==null){
             this.formItem.projectLeader =  parseInt(JSON.parse(JSON.stringify(res.data.data.projectLeader)));
+          }
+          if (this.formItem.projectLeader===parseInt(this.$cookies.get("userID"))||this.$cookies.get("userOwner") === this.$cookies.get("userID") || this.$cookies.get("userRole") === "1"){
+            this.show = true;
           }
           this.formItem.projectDescribe = JSON.parse(JSON.stringify(res.data.data.projectDescribe));
           if (res.data.data.projectStartTime!==null){
@@ -544,19 +662,18 @@ export default {
       }
     },
     remove (index) {
-        if (this.formItem.projectCreator!==this.data1[index].userID){
+        if (this.formItem.projectLeader!==this.data1[index].userID){
           this.axios.delete(this.api.baseUrl + '/project/deleteProjectUser' + '/' + this.data1[index].userID+'/' + this.formItem.projectID).then((res) => {
             let msg = res.data.msg;
             let code = res.data.code;
             if (code === 200) {
-              this.$Message.success(msg);
               this.data3.splice(index,1);
             }else {
               this.$Message.error(msg);
             }
           });
         }else {
-          this.$Message.error("拥有者是唯一的管理员，不能移除");
+          this.$Message.error("负责人是项目的管理人，不能移除");
         }
     },
     handleUpload (file) {
@@ -653,6 +770,33 @@ export default {
       if (this.$cookies.get("userID")===null){
         this.$router.push("/Login")
       }
+    },
+    addUser(){
+      this.modal3 = true;
+    },
+    addOk(){
+      const that = this;
+      if (this.addUserID!=="") {
+        this.axios.post(this.api.baseUrl + "/projectpersonnel/updateProjectStatus/"+this.formItem.projectID+"/" + this.addUserID).then((res) => {
+          let code = res.data.code;
+          let msg = res.data.msg;
+          if (code === 200) {
+            this.modal3 = false;
+            this.addUserID = null;
+            this.data3 = [];
+            this.data1 =[];
+            this.getProjectAll();
+          } else {
+            that.$Message.error(msg);
+          }
+        })
+      }else {
+        that.$Message.error("添加成员必填");
+      }
+    },
+    addCancel(){
+      this.modal3 = false;
+      this.addUserID = null;
     }
   },
   watch: {
